@@ -154,6 +154,8 @@ Thumbs.db
 *#*#
 /.kotlin/
 /assets/assets.txt
+/assets/texture_atlas.png
+/assets/texture_atlas.atlas
 
 ## Special cases:
 
