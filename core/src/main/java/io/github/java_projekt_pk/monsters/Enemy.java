@@ -32,6 +32,30 @@ public class Enemy {
 
     protected String getRenderString()
     {
-        return selected ? ">[RED]" + hurtText + "[]" : hurtText;
+        if (selected)
+        {
+            StringBuilder result = new StringBuilder();
+
+            result.append("[WHITE]>");
+
+            int maxLen = Math.max(inputText.length(), hurtText.length());
+
+            for (int i = 0; i < maxLen; i++) {
+                char c1 = i < inputText.length() ? inputText.charAt(i) : 0;
+                char c2 = i < hurtText.length() ? hurtText.charAt(i) : 0;
+
+                if (c1 == 0) result.append(c2);
+                else if (c1 == c2) result.append("[GREEN]").append(c1).append("[]");
+                else result.append("[RED]").append(c1).append("[]");
+            }
+
+            result.append("[]");
+
+            return result.toString();
+        }
+        else
+        {
+            return hurtText;
+        }
     }
 }
