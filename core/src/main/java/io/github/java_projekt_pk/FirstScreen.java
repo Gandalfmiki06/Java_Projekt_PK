@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import io.github.java_projekt_pk.globals.StringGenerator;
 import io.github.java_projekt_pk.monsters.Slime;
 import io.github.java_projekt_pk.monsters.SlimeSpecies;
 
@@ -56,6 +57,8 @@ public class FirstScreen implements Screen {
         slime5.setPos(600, 400);
 
         spriteBatch = new SpriteBatch();
+
+        System.out.println(StringGenerator.getRandomString());
     }
 
     @Override
