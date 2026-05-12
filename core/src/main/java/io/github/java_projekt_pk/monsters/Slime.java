@@ -2,10 +2,13 @@ package io.github.java_projekt_pk.monsters;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Slime {
+import io.github.java_projekt_pk.globals.RenderingGlobals;
+
+public class Slime extends Enemy {
     static final float INITIAL_SCALE = 3.0f;
 
     private SlimeSpecies species;
@@ -23,7 +26,7 @@ public class Slime {
         animation = species.getAnimation(animationName);
     }
 
-    // Set the position of the slime center ((0, 0) is upper left corner)
+    // Set the position of the slime center ((0, 0) is lower left corner)
     public void setPos(float x, float y) {
         this.x = x;
         this.y = y;
@@ -51,7 +54,12 @@ public class Slime {
         TextureRegion currentFrame = animation.getKeyFrame(time, true);
         float width = currentFrame.getRegionWidth() * windowScale;
         float height = currentFrame.getRegionHeight() * windowScale;
-        batch.draw(currentFrame, x - (int) (width / 2), Gdx.graphics.getHeight() - y - (int) (height * 0.15), width,
-                height);
+        // batch.draw(currentFrame, x - (int) (width / 2), Gdx.graphics.getHeight() - y - (int) (height * 0.15), width,
+        //         height);
+        batch.draw(currentFrame, x - (int) (width / 2), y, width, height);
+
+        String renderString = getRenderString();
+        GlyphLayout layout = new GlyphLayout(RenderingGlobals.font, renderString);
+        RenderingGlobals.font.draw(batch, renderString, x - (int)(layout.width) / 2, y);
     }
 }
