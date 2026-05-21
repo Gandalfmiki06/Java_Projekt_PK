@@ -30,41 +30,68 @@ public class Enemy {
         if (health > 0) hurtText = HurtTextGenerator.getRandomText();
     }
 
+    enum TextColor
+    {
+        WHITE,
+        RED,
+        GREEN
+    }
+
     protected String getRenderString()
     {
-        if (selected)
+        if (!selected) return hurtText;
+
+        StringBuilder result = new StringBuilder();
+
+        result.append("[WHITE]>");
+        TextColor color = TextColor.WHITE;
+
+        int maxLen = Math.max(inputText.length(), hurtText.length());
+
+        for (int i = 0; i < maxLen; i++)
         {
-            StringBuilder result = new StringBuilder();
+            char c1 = i < inputText.length() ? inputText.charAt(i) : 0;
+            char c2 = i < hurtText.length() ? hurtText.charAt(i) : 0;
 
-            result.append("[WHITE]>");
+            TextColor targetColor;
+            char nextChar;
 
-            int maxLen = Math.max(inputText.length(), hurtText.length());
-
-            for (int i = 0; i < maxLen; i++) {
-                char c1 = i < inputText.length() ? inputText.charAt(i) : 0;
-                char c2 = i < hurtText.length() ? hurtText.charAt(i) : 0;
-
-                if (c1 == 0) result.append(c2);
-                else if (c1 == c2) result.append("[GREEN]").append(escapeMarkup(c1)).append("[]");
-                else result.append("[RED]").append(escapeMarkup(c1)).append("[]");
+            if (c1 == 0)
+            {
+                targetColor = TextColor.WHITE;
+                nextChar = c2;
+            }
+            else if (c1 == c2) 
+            {
+                targetColor = TextColor.GREEN;
+                nextChar = c1;
+            }
+            else
+            {
+                targetColor = TextColor.RED;
+                nextChar = c1;
             }
 
-            result.append("[]");
+            if (color != targetColor)
+            {
+                result.append("[][").append(targetColor.name()).append("]");
+                color = targetColor;
+            }
 
-            System.out.println(result.toString());
-            return result.toString();
+            result.append(escapeMarkup(nextChar));
         }
-        else
-        {
-            return hurtText;
-        }
+
+        result.append("[][]");
+
+        System.out.println(result.toString());
+        return result.toString();
     }
 
     private String escapeMarkup(char c)
     {
         if (c == '[')
         {
-            return "[[";
+            return "[["; //this avoids starting new markup tag
         }
 
         return String.valueOf(c);

@@ -18,7 +18,8 @@ public class InputManager extends InputAdapter {
             return true;
         }
 
-        if (c == '\n' || c == '\r' || c == '\t')
+        if (c < 32 ||
+            c == 127) //delete key
         {
             return false;
         }
