@@ -10,7 +10,8 @@ public class HurtTextGenerator {
     private static final List<String> possibleWords = Arrays.asList(
         "public",
         "static",
-        "final"
+        "final",
+        "[2]"
     );
 
     public static String getRandomText()

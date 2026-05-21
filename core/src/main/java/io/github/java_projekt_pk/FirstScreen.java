@@ -8,8 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import io.github.java_projekt_pk.Managers.EnemyManager;
+import io.github.java_projekt_pk.Managers.InputManager;
 import io.github.java_projekt_pk.globals.RenderingGlobals;
-import io.github.java_projekt_pk.monsters.EnemyManager;
 import io.github.java_projekt_pk.monsters.Slime;
 import io.github.java_projekt_pk.monsters.SlimeSpecies;
 
@@ -31,9 +32,14 @@ public class FirstScreen implements Screen {
     Slime slime4;
     Slime slime5;
 
+    InputManager inputManager;
+
     public FirstScreen() {
         atlas = new TextureAtlas(Gdx.files.internal("texture_atlas.atlas"));
         RenderingGlobals.init();
+
+        inputManager = new InputManager();
+        Gdx.input.setInputProcessor(inputManager);
 
         redSlimeSpecies = new SlimeSpecies(atlas, "Red_Slime");
         greenSlimeSpecies = new SlimeSpecies(atlas, "Green_Slime");

@@ -45,17 +45,47 @@ public class Enemy {
                 char c2 = i < hurtText.length() ? hurtText.charAt(i) : 0;
 
                 if (c1 == 0) result.append(c2);
-                else if (c1 == c2) result.append("[GREEN]").append(c1).append("[]");
-                else result.append("[RED]").append(c1).append("[]");
+                else if (c1 == c2) result.append("[GREEN]").append(escapeMarkup(c1)).append("[]");
+                else result.append("[RED]").append(escapeMarkup(c1)).append("[]");
             }
 
             result.append("[]");
 
+            System.out.println(result.toString());
             return result.toString();
         }
         else
         {
             return hurtText;
         }
+    }
+
+    private String escapeMarkup(char c)
+    {
+        if (c == '[')
+        {
+            return "[[";
+        }
+
+        return String.valueOf(c);
+    }
+
+    public void typeCharacter(char c)
+    {
+        inputText += c;
+    }
+
+    public void backspace()
+    {
+        if (!inputText.isEmpty())
+        {
+            inputText = inputText.substring(0, inputText.length() - 1);
+            System.out.println(inputText);
+        }
+    }
+
+    public void delete()
+    {
+        ///
     }
 }
