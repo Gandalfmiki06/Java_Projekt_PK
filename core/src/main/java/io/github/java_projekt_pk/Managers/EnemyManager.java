@@ -13,8 +13,14 @@ public class EnemyManager {
     {
         if (enemies.isEmpty()) return;
 
-        enemies.get(enemyPointer).unselect();
+        if (enemyPointer != enemies.size()) enemies.get(enemyPointer).unselect();
         enemyPointer = (enemyPointer + 1) % enemies.size();
         enemies.get(enemyPointer).select();
+    }
+
+    public static void deleteEnemy(Enemy instance)
+    {
+        enemies.remove(instance);
+        selectNextEnemy();
     }
 }

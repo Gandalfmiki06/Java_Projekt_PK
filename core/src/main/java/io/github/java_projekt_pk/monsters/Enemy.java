@@ -1,8 +1,22 @@
 package io.github.java_projekt_pk.monsters;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import io.github.java_projekt_pk.Managers.EnemyManager;
 import io.github.java_projekt_pk.globals.HurtTextGenerator;
+import io.github.java_projekt_pk.globals.RenderingGlobals;
 
 public class Enemy {
+    static final float INITIAL_SCALE = 3.0f;
+    protected float x = 0.0f;
+    protected float y = 0.0f;
+    protected float scale = 1.0f;
+    protected Animation<TextureRegion> animation;
+
     protected boolean selected = false;
     protected String hurtText = "";
     protected int health = 1;
@@ -24,10 +38,20 @@ public class Enemy {
         selected = true;
     }
 
-    public void hurt()
+    private void hurt()
     {
         health--;
-        if (health > 0) hurtText = HurtTextGenerator.getRandomText();
+        if (health > 0)
+        {
+            hurtText = HurtTextGenerator.getRandomText();
+            inputText = "";
+        }
+        else die();
+    }
+
+    private void die()
+    {
+        EnemyManager.deleteEnemy(this);
     }
 
     enum TextColor
@@ -83,7 +107,6 @@ public class Enemy {
 
         result.append("[][]");
 
-        System.out.println(result.toString());
         return result.toString();
     }
 
@@ -100,6 +123,7 @@ public class Enemy {
     public void typeCharacter(char c)
     {
         inputText += c;
+        if (inputText.equals(hurtText)) hurt();
     }
 
     public void backspace()
@@ -107,12 +131,47 @@ public class Enemy {
         if (!inputText.isEmpty())
         {
             inputText = inputText.substring(0, inputText.length() - 1);
-            System.out.println(inputText);
         }
     }
 
-    public void delete()
-    {
-        ///
+    public void draw(SpriteBatch batch, float time) {
+        var windowScale = Gdx.graphics.getHeight() / 720.0f * INITIAL_SCALE * scale;
+        TextureRegion currentFrame = animation.getKeyFrame(time, true);
+        float width = currentFrame.getRegionWidth() * windowScale;
+        float height = currentFrame.getRegionHeight() * windowScale;
+        // batch.draw(currentFrame, x - (int) (width / 2), Gdx.graphics.getHeight() - y - (int) (height * 0.15), width,
+        //         height);
+        batch.draw(currentFrame, x - (int) (width / 2), y, width, height);
+
+        String renderString = getRenderString();
+        GlyphLayout layout = new GlyphLayout(RenderingGlobals.font, renderString);
+        RenderingGlobals.font.draw(batch, renderString, x - (int)(layout.width) / 2, y);
+    }
+
+    public void setAnimation(String animationName) {
+        
+    }
+
+    // Set the position of the slime center ((0, 0) is lower left corner)
+    public void setPos(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    // Set slime scale (default: 1)
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
+    public float getPosX() {
+        return x;
+    }
+
+    public float getPosY() {
+        return y;
+    }
+
+    public float getScale() {
+        return scale;
     }
 }
