@@ -34,7 +34,7 @@ public class InGameScreen implements Screen {
     private void nextRandomText() {
         activeTexts.add(SystemDText.randomText());
 
-        if(activeTexts.size() > 128)
+        if (activeTexts.size() > 128)
             activeTexts.removeFirst();
 
         timeSinceLastText -= nextTextDelay;

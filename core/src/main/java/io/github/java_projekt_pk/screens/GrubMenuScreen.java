@@ -11,8 +11,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.java_projekt_pk.FirstScreen;
-import io.github.java_projekt_pk.Managers.FontManager;
 import io.github.java_projekt_pk.Main;
+import io.github.java_projekt_pk.Managers.FontManager;
 
 public class GrubMenuScreen extends ScreenAdapter {
     private enum MenuState {
@@ -61,12 +61,14 @@ public class GrubMenuScreen extends ScreenAdapter {
 
                 if (keycode == Input.Keys.UP || keycode == Input.Keys.W) {
                     selectedIndex--;
-                    if (selectedIndex < 0) selectedIndex = currentListSize - 1;
+                    if (selectedIndex < 0)
+                        selectedIndex = currentListSize - 1;
                     return true;
                 }
                 if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
                     selectedIndex++;
-                    if (selectedIndex >= currentListSize) selectedIndex = 0;
+                    if (selectedIndex >= currentListSize)
+                        selectedIndex = 0;
                     return true;
                 }
                 if (keycode == Input.Keys.ENTER || keycode == Input.Keys.SPACE) {
@@ -175,8 +177,7 @@ public class GrubMenuScreen extends ScreenAdapter {
                     Gdx.app.exit();
                     break;
             }
-        }
-        else if (currentState == MenuState.LEADERBOARD) {
+        } else if (currentState == MenuState.LEADERBOARD) {
             if (selectedIndex == 0) {
                 changeState(MenuState.MAIN_MENU);
             }

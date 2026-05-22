@@ -5,7 +5,9 @@ import com.badlogic.gdx.Gdx;
 import io.github.java_projekt_pk.Managers.FontManager;
 import io.github.java_projekt_pk.screens.GrubMenuScreen;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+/**
+ * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
+ */
 public class Main extends Game {
     private static Main instance;
 
@@ -22,7 +24,7 @@ public class Main extends Game {
         setScreen(new GrubMenuScreen());
     }
 
-    private void registerFonts()  {
+    private void registerFonts() {
         FontManager.registerFont("google", Gdx.files.internal("GoogleSansCode.ttf"));
         FontManager.registerFont("google-bold", Gdx.files.internal("GoogleSansCode-Bold.ttf"));
         FontManager.registerFont("terminus", Gdx.files.internal("TerminusTTF-4.49.3.ttf"));

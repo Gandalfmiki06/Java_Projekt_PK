@@ -14,12 +14,12 @@ public class FontManager {
     private static final Map<String, FreeTypeFontGenerator> fontMap = new HashMap<>();
 
     public static void registerFont(String id, FileHandle handle) {
-        if(!handle.exists()) {
+        if (!handle.exists()) {
             Gdx.app.log("[WARN][FontManager]", "Plik nie istnieje");
             return;
         }
 
-        if(fontMap.containsKey(id)) {
+        if (fontMap.containsKey(id)) {
             Gdx.app.log("[WARN][FontManager]", "Czcionka '" + id + "' jest juz zarejestrowana");
             return;
         }
@@ -31,7 +31,7 @@ public class FontManager {
     public static BitmapFont generateFont(String id, FreeTypeFontParameter params) {
         var generator = fontMap.get(id);
 
-        if(generator == null) {
+        if (generator == null) {
             System.out.println("[WARN] [FontManager] Czcionka '" + id + "' nie istnieje. Zostanie zwrocona domyslna czcionka");
             return new BitmapFont();
         }
