@@ -1,12 +1,17 @@
 package io.github.java_projekt_pk;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import io.github.java_projekt_pk.Managers.EnemyManager;
+import io.github.java_projekt_pk.Managers.InputManager;
+import io.github.java_projekt_pk.globals.RenderingGlobals;
+import io.github.java_projekt_pk.monsters.Enemy;
 import io.github.java_projekt_pk.monsters.Slime;
 import io.github.java_projekt_pk.monsters.SlimeSpecies;
 
@@ -22,39 +27,46 @@ public class FirstScreen implements Screen {
     SlimeSpecies greenSlimeSpecies;
     SlimeSpecies blueSlimeSpecies;
 
-    Slime slime1;
-    Slime slime2;
-    Slime slime3;
-    Slime slime4;
-    Slime slime5;
+    InputManager inputManager;
 
     public FirstScreen() {
         atlas = new TextureAtlas(Gdx.files.internal("texture_atlas.atlas"));
+        RenderingGlobals.init();
+
+        inputManager = new InputManager();
+        Gdx.input.setInputProcessor(inputManager);
 
         redSlimeSpecies = new SlimeSpecies(atlas, "Red_Slime");
         greenSlimeSpecies = new SlimeSpecies(atlas, "Green_Slime");
         blueSlimeSpecies = new SlimeSpecies(atlas, "Blue_Slime");
 
-        slime1 = new Slime(redSlimeSpecies);
+        Slime slime1 = new Slime(redSlimeSpecies);
         slime1.setAnimation("Attack3");
         slime1.setPos(800, 500);
+        EnemyManager.enemies.add(slime1);
 
-        slime2 = new Slime(greenSlimeSpecies);
+        Slime slime2 = new Slime(greenSlimeSpecies);
         slime2.setAnimation("Hurt");
         slime2.setPos(400, 600);
+        EnemyManager.enemies.add(slime2);
 
-        slime3 = new Slime(greenSlimeSpecies);
+        Slime slime3 = new Slime(greenSlimeSpecies);
         slime3.setAnimation("Run");
         slime3.setScale(0.5f);
+        slime3.setPos(100, 100);
+        EnemyManager.enemies.add(slime3);
 
-        slime4 = new Slime(blueSlimeSpecies);
+        Slime slime4 = new Slime(blueSlimeSpecies);
         slime4.setAnimation("Jump");
         slime4.setPos(300, 300);
+        EnemyManager.enemies.add(slime4);
 
-        slime5 = new Slime(blueSlimeSpecies);
+        Slime slime5 = new Slime(blueSlimeSpecies);
         slime5.setAnimation("Walk");
         slime5.setPos(600, 400);
+        EnemyManager.enemies.add(slime5);
 
+        EnemyManager.selectNextEnemy();
         spriteBatch = new SpriteBatch();
     }
 
@@ -67,16 +79,15 @@ public class FirstScreen implements Screen {
     public void render(float delta) {
         time += delta;
 
+        handleInput();
+
         ScreenUtils.clear(Color.BLACK);
 
-        slime3.setPos(Gdx.input.getX(), Gdx.input.getY());
-
         spriteBatch.begin();
-        slime1.draw(spriteBatch, time);
-        slime2.draw(spriteBatch, time);
-        slime3.draw(spriteBatch, time);
-        slime4.draw(spriteBatch, time);
-        slime5.draw(spriteBatch, time);
+        for (Enemy enemy : EnemyManager.enemies) {
+            enemy.draw(spriteBatch, time);
+        }
+
         spriteBatch.end();
     }
 
@@ -110,5 +121,12 @@ public class FirstScreen implements Screen {
         // Destroy screen's assets here.
         atlas.dispose();
         spriteBatch.dispose();
+        RenderingGlobals.font.dispose();
+    }
+
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+            EnemyManager.selectNextEnemy();
+        }
     }
 }
