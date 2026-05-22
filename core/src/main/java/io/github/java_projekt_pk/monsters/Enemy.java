@@ -23,47 +23,38 @@ public class Enemy {
 
     public String inputText = "";
 
-    public Enemy()
-    {
+    public Enemy() {
         hurtText = HurtTextGenerator.getRandomText();
     }
 
-    public void unselect()
-    {
+    public void unselect() {
         selected = false;
     }
 
-    public void select()
-    {
+    public void select() {
         selected = true;
     }
 
-    private void hurt()
-    {
+    private void hurt() {
         health--;
-        if (health > 0)
-        {
+        if (health > 0) {
             hurtText = HurtTextGenerator.getRandomText();
             inputText = "";
-        }
-        else die();
+        } else
+            die();
     }
 
-    private void die()
-    {
+    private void die() {
         EnemyManager.deleteEnemy(this);
     }
 
-    enum TextColor
-    {
-        WHITE,
-        RED,
-        GREEN
+    enum TextColor {
+        WHITE, RED, GREEN
     }
 
-    protected String getRenderString()
-    {
-        if (!selected) return hurtText;
+    protected String getRenderString() {
+        if (!selected)
+            return hurtText;
 
         StringBuilder result = new StringBuilder();
 
@@ -72,32 +63,25 @@ public class Enemy {
 
         int maxLen = Math.max(inputText.length(), hurtText.length());
 
-        for (int i = 0; i < maxLen; i++)
-        {
+        for (int i = 0; i < maxLen; i++) {
             char c1 = i < inputText.length() ? inputText.charAt(i) : 0;
             char c2 = i < hurtText.length() ? hurtText.charAt(i) : 0;
 
             TextColor targetColor;
             char nextChar;
 
-            if (c1 == 0)
-            {
+            if (c1 == 0) {
                 targetColor = TextColor.WHITE;
                 nextChar = c2;
-            }
-            else if (c1 == c2) 
-            {
+            } else if (c1 == c2) {
                 targetColor = TextColor.GREEN;
                 nextChar = c1;
-            }
-            else
-            {
+            } else {
                 targetColor = TextColor.RED;
                 nextChar = c1;
             }
 
-            if (color != targetColor)
-            {
+            if (color != targetColor) {
                 result.append("[][").append(targetColor.name()).append("]");
                 color = targetColor;
             }
@@ -110,26 +94,22 @@ public class Enemy {
         return result.toString();
     }
 
-    private String escapeMarkup(char c)
-    {
-        if (c == '[')
-        {
-            return "[["; //this avoids starting new markup tag
+    private String escapeMarkup(char c) {
+        if (c == '[') {
+            return "[["; // this avoids starting new markup tag
         }
 
         return String.valueOf(c);
     }
 
-    public void typeCharacter(char c)
-    {
+    public void typeCharacter(char c) {
         inputText += c;
-        if (inputText.equals(hurtText)) hurt();
+        if (inputText.equals(hurtText))
+            hurt();
     }
 
-    public void backspace()
-    {
-        if (!inputText.isEmpty())
-        {
+    public void backspace() {
+        if (!inputText.isEmpty()) {
             inputText = inputText.substring(0, inputText.length() - 1);
         }
     }
@@ -139,17 +119,18 @@ public class Enemy {
         TextureRegion currentFrame = animation.getKeyFrame(time, true);
         float width = currentFrame.getRegionWidth() * windowScale;
         float height = currentFrame.getRegionHeight() * windowScale;
-        // batch.draw(currentFrame, x - (int) (width / 2), Gdx.graphics.getHeight() - y - (int) (height * 0.15), width,
-        //         height);
+        // batch.draw(currentFrame, x - (int) (width / 2), Gdx.graphics.getHeight() - y
+        // - (int) (height * 0.15), width,
+        // height);
         batch.draw(currentFrame, x - (int) (width / 2), y, width, height);
 
         String renderString = getRenderString();
         GlyphLayout layout = new GlyphLayout(RenderingGlobals.font, renderString);
-        RenderingGlobals.font.draw(batch, renderString, x - (int)(layout.width) / 2, y);
+        RenderingGlobals.font.draw(batch, renderString, x - (int) (layout.width) / 2, y);
     }
 
     public void setAnimation(String animationName) {
-        
+
     }
 
     // Set the position of the slime center ((0, 0) is lower left corner)

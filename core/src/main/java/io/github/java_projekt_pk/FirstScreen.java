@@ -124,10 +124,8 @@ public class FirstScreen implements Screen {
         RenderingGlobals.font.dispose();
     }
 
-    private void handleInput()
-    {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB))
-        {
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             EnemyManager.selectNextEnemy();
         }
     }
