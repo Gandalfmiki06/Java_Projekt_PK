@@ -18,7 +18,7 @@ public class Hud {
     private final int HEART_SIZE = 16 * 2;
     private final int HEART_MARGIN = 3;
     private final float DAMAGE_HEART_DURATION = 0.2f;
-    private final int SCORE_TEXT_OFFSET = 50;
+    private final int SCORE_TEXT_OFFSET = 20;
 
     private AtlasRegion heartFull;
     private AtlasRegion heartEmpty;
@@ -41,9 +41,9 @@ public class Hud {
 
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = 40;
-        parameter.color = Color.CORAL;
+        parameter.color = Color.WHITE;
         scoreFont = FontManager.generateFont("google", parameter);
-        scoreText = "0";
+        updateScore();
     }
 
     public void timeStep(double time) {
@@ -76,21 +76,25 @@ public class Hud {
                     Gdx.graphics.getHeight() - HEALTH_BAR_OFFSET_Y, HEART_SIZE, HEART_SIZE);
         }
     }
-
-    private void drawScoreText(SpriteBatch spriteBatch) {
-        GlyphLayout layout = new GlyphLayout(scoreFont, scoreText);
-        scoreFont.draw(spriteBatch, scoreText, Gdx.graphics.getWidth() / 2 - (int) layout.width / 2,
-                Gdx.graphics.getHeight() - layout.height - SCORE_TEXT_OFFSET);
-    }
     
     public void addScore(int score) {
         this.score += score;
-        scoreText = Integer.toString(this.score);
+        updateScore();
     }
 
     public void damage() {
         health -= 1;
         damaged = true;
         timeSinceDamage = 0.0f;
+    }
+    
+    private void updateScore() {
+        scoreText = String.format("%04d", this.score);
+    }
+    
+    private void drawScoreText(SpriteBatch spriteBatch) {
+        GlyphLayout layout = new GlyphLayout(scoreFont, scoreText);
+        scoreFont.draw(spriteBatch, scoreText, Gdx.graphics.getWidth() / 2 - (int) layout.width / 2,
+                Gdx.graphics.getHeight() - SCORE_TEXT_OFFSET);
     }
 }
