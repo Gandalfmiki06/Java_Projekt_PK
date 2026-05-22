@@ -13,6 +13,9 @@ import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.monsters.SlimeSpecies;
 import io.github.java_projekt_pk.screens.GrubMenuScreen;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
  * platforms.
@@ -32,15 +35,43 @@ public class Main extends Game {
 
     private static BitmapFont font;
 
+    private static Leaderboard leaderboard;
+
     public static SoundManager soundManager = new SoundManager();
 
     public static Main getGameInstance() {
         return instance;
     }
 
+    public static String getPackageId() {
+        return Main.class.getPackageName();
+    }
+
+    public static Path getProjectDir() {
+        String os = System.getProperty("os.name").toLowerCase();
+        String packageId = Main.getPackageId();
+
+        if (os.contains("win")) {
+            return Paths.get(System.getenv("APPDATA"), packageId);
+        } else if (os.contains("mac")) {
+            return Paths.get(System.getProperty("user.home"), "Library", "Application Support", packageId);
+        } else {
+            String xdgPath = System.getenv("XDG_CONFIG_HOME");
+
+            if (xdgPath != null) {
+                return Paths.get(xdgPath, "share", packageId);
+            } else {
+                return Paths.get(System.getProperty("user.home"), ".config", "share", packageId);
+            }
+        }
+    }
+
     @Override
     public void create() {
         instance = this;
+
+        leaderboard = new Leaderboard(getProjectDir().resolve("leaderboard"), 10);
+        leaderboard.setAutosave(true);
 
         registerFonts();
 
@@ -81,6 +112,10 @@ public class Main extends Game {
 
     public static BitmapFont getFont() {
         return font;
+    }
+
+    public static Leaderboard getLeaderboard() {
+        return leaderboard;
     }
 
     @Override

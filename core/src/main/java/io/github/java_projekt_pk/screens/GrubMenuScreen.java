@@ -1,5 +1,7 @@
 package io.github.java_projekt_pk.screens;
 
+import java.time.format.DateTimeFormatter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -8,19 +10,27 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-
 import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.FontManager;
+import io.github.java_projekt_pk.globals.Credits;
+import io.github.java_projekt_pk.ui.Menu;
+import io.github.java_projekt_pk.ui.MenuItem;
+import io.github.java_projekt_pk.ui.SettingsMenu;
 
 public class GrubMenuScreen extends ScreenAdapter {
 
     private enum MenuState {
         MAIN_MENU,
+        SETTINGS,
         LEADERBOARD,
-        SETTINGS
+        CREDITS,
+        LICENSE
     }
+    
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
@@ -28,11 +38,11 @@ public class GrubMenuScreen extends ScreenAdapter {
 
     private MenuState currentState = MenuState.MAIN_MENU;
 
-    private Array<String> mainMenuOptions;
-    private Array<String> leaderboardOptions;
-    private Array<String> settingsOptions;
-
-    private int selectedIndex = 0;
+    private Menu mainMenuOptions;
+    private Menu settingsOptions;
+    private Menu leaderboardOptions;
+    private Menu creditsOptions;
+    private Menu licensesOptions;
 
     private final int FONT_SIZE = 20;
 
@@ -46,63 +56,82 @@ public class GrubMenuScreen extends ScreenAdapter {
 
         font = FontManager.generateFont("terminus", params);
 
-        mainMenuOptions = new Array<>();
-        mainMenuOptions.add("Start Game");
-        mainMenuOptions.add("Leaderboard");
-        mainMenuOptions.add("Settings");
-        mainMenuOptions.add("Quit Game");
+        MenuItem backToMenuItem = new MenuItem("Back do menu", () -> changeState(MenuState.MAIN_MENU));
 
-        leaderboardOptions = new Array<>();
-        leaderboardOptions.add("<- Back to Main Menu");
-        leaderboardOptions.add("1. XDDD - 9999 pts");
-        leaderboardOptions.add("2. LOL - 5400 pts");
-        leaderboardOptions.add("3. KIT - 1200 pts");
+        mainMenuOptions = new Menu("Main Menu")
+            .addItem(new MenuItem("Start Game", () -> Main.getGameInstance().setScreen(new InGameScreen())))
+            .addItem(new MenuItem("Settings", () -> {
+                changeState(MenuState.SETTINGS);
+             }))
+            .addItem(new MenuItem("Leaderboard", () -> {
+                this.leaderboardOptions.clearItems();
+                this.leaderboardOptions.addItem(backToMenuItem);
 
-        settingsOptions = new Array<>();
-        settingsOptions.add("<- Back to Main Menu and Apply");
-        settingsOptions.add("Master Volume");
-        settingsOptions.add("Music Volume");
-        settingsOptions.add("Sfx Volume");
+                var lb = Main.getLeaderboard();
+
+                leaderboardOptions.addItem(new MenuItem("[DEBUG] Generate new random Score", () -> {
+                    lb.addEntry("ANONYMOUS", MathUtils.random(0, 100000));
+                    lb.save();
+                    changeState(MenuState.MAIN_MENU);
+                }));
+
+                for (var entry : lb.getScores()) {
+                    leaderboardOptions.addItem(new MenuItem(
+                        entry.score() + " - " + entry.player() + "     [" + entry.time().format(FORMATTER) + "]",
+                        () -> {},
+                        false)
+                    );
+                }
+
+                changeState(MenuState.LEADERBOARD);
+            }))
+            .addItem(new MenuItem("Credits", () -> changeState(MenuState.CREDITS)))
+            .addItem(new MenuItem("Licenses", () -> changeState(MenuState.LICENSE)))
+            .addItem(new MenuItem("Quit Game", () -> Gdx.app.exit()));
+        
+        settingsOptions = new SettingsMenu(backToMenuItem);
+
+        leaderboardOptions = new Menu("Leaderboards");
+
+        creditsOptions = new Menu("Credits")
+            .addItem(backToMenuItem);
+
+        for (var txt : Credits.authors) {
+            creditsOptions.addItem(new MenuItem(txt, () -> {}, false));
+        }
+
+        licensesOptions = new Menu("Licenses")
+            .addItem(backToMenuItem);
+
+        for (var txt : Credits.licenses) {
+            licensesOptions.addItem(new MenuItem(txt, () -> {}, false));
+        }
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                int currentListSize = getCurrentList().size;
+                Menu menu = getCurrentMenu();
 
                 if (keycode == Input.Keys.UP || keycode == Input.Keys.W) {
-                    selectedIndex--;
-                    if (selectedIndex < 0) {
-                        selectedIndex = currentListSize - 1;
-                    }
+                    menu.moveSelectionUp();
                     return true;
-                }
-                if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
-                    selectedIndex = (selectedIndex + 1) % currentListSize;
+                } else if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
+                    menu.moveSelectionDown();
                     return true;
-                }
-                if (keycode == Input.Keys.ENTER || keycode == Input.Keys.SPACE) {
-                    handleSelection();
+                } else if (keycode == Input.Keys.LEFT || keycode == Input.Keys.A) {
+                    menu.leftPressed();
                     return true;
-                }
-                if (keycode == Input.Keys.ESCAPE) {
-                    if (currentState == MenuState.LEADERBOARD || currentState == MenuState.SETTINGS) {
+                } else if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.D) {
+                    menu.rightPressed();
+                    return true;
+                } else if (keycode == Input.Keys.ENTER || keycode == Input.Keys.SPACE) {
+                    menu.executeCurrentSelection();
+                    return true;
+                } else if (keycode == Input.Keys.ESCAPE) {
+                    if (currentState != MenuState.MAIN_MENU) {
                         changeState(MenuState.MAIN_MENU);
                     }
                     return true;
-                }
-                if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.D)
-                {
-                    if (currentState == MenuState.SETTINGS)
-                    {
-                        modifySetting(true);
-                    }
-                }
-                if (keycode == Input.Keys.LEFT || keycode == Input.Keys.A)
-                {
-                    if (currentState == MenuState.SETTINGS)
-                    {
-                        modifySetting(false);
-                    }
                 }
                 return false;
             }
@@ -126,55 +155,45 @@ public class GrubMenuScreen extends ScreenAdapter {
         shapeRenderer.rect(boxX, boxY, boxWidth, boxHeight);
         shapeRenderer.end();
 
-        Array<String> activeOptions = getCurrentList();
-        float itemX = boxX + 30;
-        float itemY = boxY + boxHeight - 40;
+        Menu menu = getCurrentMenu();
+        Array<MenuItem> items = menu.getItems();
+        MenuItem selectedItem = menu.getSelectedItem();
+        int selectedIndex = menu.getSelectedIndex();
+
+        int TEXT_SPACE = 10;
+        float itemX = boxX + TEXT_SPACE;
+        float itemY = boxY + boxHeight - TEXT_SPACE;
 
         float itemBoxY = itemY;
 
-        for (int i = 0; i < activeOptions.size; i++) {
+        for (int i = 0; i < items.size; i++) {
             if (i == selectedIndex) {
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 shapeRenderer.setColor(Color.WHITE);
-                shapeRenderer.rect(itemX - 10, itemBoxY - 35 + 5, boxWidth - 40, FONT_SIZE + 35 - 20);
+                shapeRenderer.rect(itemX - TEXT_SPACE, itemBoxY - FONT_SIZE - TEXT_SPACE, boxWidth, FONT_SIZE + TEXT_SPACE);
                 shapeRenderer.end();
 
                 break;
             }
 
-            itemBoxY -= 35;
+            itemBoxY -= TEXT_SPACE * 3;
         }
 
         batch.begin();
 
-        for (int i = 0; i < activeOptions.size; i++) {
-            String itemText = activeOptions.get(i);
+        for (int i = 0; i < items.size; i++) {
+            MenuItem item = items.get(i);
 
-            if (activeOptions == settingsOptions)
-            {
-                switch (i) {
-                    case 1 -> itemText = String.format("%-15s%s", itemText, getVolumeBar(Main.soundManager.MasterVolume));
-                    case 2 -> itemText = String.format("%-15s%s", itemText, getVolumeBar(Main.soundManager.MusicVolume));
-                    case 3 -> itemText = String.format("%-15s%s", itemText, getVolumeBar(Main.soundManager.SfxVolume));
-                    default -> {}
-                }
-            }
-
-            if (i == selectedIndex) {
-                font.draw(batch, "[BLACK]" + itemText, itemX, itemY);
+            if (item.equals(selectedItem)) {
+                font.draw(batch, "[BLACK]" + item.getLabel(), itemX, itemY);
             } else {
-                font.draw(batch, "[WHITE]" + itemText, itemX, itemY);
+                font.draw(batch, "[" + (item.isSelectable() ? "WHITE" : "GRAY") + "]" + item.getLabel(), itemX, itemY);
             }
-            itemY -= 35;
+            itemY -= TEXT_SPACE * 3;
         }
 
         font.draw(batch, "GNU GRUB  version 2.06", 50, screenHeight - 50);
-        switch (currentState) {
-            case MAIN_MENU -> font.draw(batch, "Select an option to proceed.", 50, screenHeight - 90);
-            case LEADERBOARD -> font.draw(batch, "GLOBAL LEADERBOARD - Top Scores", 50, screenHeight - 90);
-            case SETTINGS -> font.draw(batch, "Settings", 50, screenHeight - 90);
-            default -> {}
-        }
+        font.draw(batch, menu.getTitle(), 50, screenHeight - 90);
 
         if (currentState == MenuState.MAIN_MENU) {
             font.draw(batch, "Press ENTER to select.", 50, 80);
@@ -185,78 +204,25 @@ public class GrubMenuScreen extends ScreenAdapter {
         batch.end();
     }
 
-    private Array<String> getCurrentList() {
-        return switch (currentState) {
-            case MAIN_MENU -> mainMenuOptions;
-            case LEADERBOARD -> leaderboardOptions;
-            case SETTINGS -> settingsOptions;
-            default -> mainMenuOptions;
-        };
+    private Menu getCurrentMenu() {
+        if (currentState == MenuState.MAIN_MENU) {
+            return mainMenuOptions;
+        } else if (currentState == MenuState.SETTINGS) {
+            return settingsOptions;
+        } else if (currentState == MenuState.LEADERBOARD) {
+            return leaderboardOptions;
+        } else if (currentState == MenuState.CREDITS) {
+            return creditsOptions;
+        } else if (currentState == MenuState.LICENSE) {
+            return licensesOptions;
+        } else {
+            return new Menu("FALLBACK MENU");
+        }
     }
 
     private void changeState(MenuState newState) {
         this.currentState = newState;
-        this.selectedIndex = 0;
-    }
-
-    private void handleSelection() {
-        switch (currentState) {
-            case MAIN_MENU -> {
-                switch (selectedIndex) { // can't we change this to an enum or something like that so it's clear what option coresponds to what?
-                    case 0 -> Main.getGameInstance().setScreen(new InGameScreen());
-                    case 1 -> changeState(MenuState.LEADERBOARD);
-                    case 2 -> changeState(MenuState.SETTINGS);
-                    case 3 -> Gdx.app.exit();
-                }
-            }
-            case LEADERBOARD -> {
-                if (selectedIndex == 0) {
-                    changeState(MenuState.MAIN_MENU);
-                }
-            }
-            case SETTINGS -> {
-                switch (selectedIndex) {
-                    case 0 -> {
-                        changeState(MenuState.MAIN_MENU);
-                    }
-                }
-            }
-        }
-    }
-
-    private void modifySetting(boolean increase)
-    {
-        switch (selectedIndex) {
-            case 1 -> Main.soundManager.MasterVolume += increase ? 0.05f : -0.05f;
-            case 2 -> Main.soundManager.MusicVolume += increase ? 0.05f : -0.05f;
-            case 3 -> Main.soundManager.SfxVolume += increase ? 0.05f : -0.05f;
-        }
-
-        Main.soundManager.MasterVolume = Math.clamp(Main.soundManager.MasterVolume, 0, 1);
-        Main.soundManager.MusicVolume = Math.clamp(Main.soundManager.MusicVolume, 0, 1);
-        Main.soundManager.SfxVolume = Math.clamp(Main.soundManager.SfxVolume, 0, 1);
-
-        Main.soundManager.updateVolume();
-    }
-
-    private String getVolumeBar(float volume)
-    {
-        int filled = Math.round(volume * 20);
-        StringBuilder bar = new StringBuilder("[[");
-
-        for (int i = 0; i < 20; i++) {
-            if (i < filled) {
-                bar.append('|');
-            } else {
-                bar.append('-');
-            }
-        }
-
-        bar.append("] ");
-        bar.append(Math.round(volume*100));
-        bar.append('%');
-
-        return bar.toString();
+        getCurrentMenu().setSelectedIndex(0);
     }
 
     @Override
