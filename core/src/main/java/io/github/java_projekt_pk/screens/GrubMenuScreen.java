@@ -1,5 +1,7 @@
 package io.github.java_projekt_pk.screens;
 
+import java.time.format.DateTimeFormatter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -25,6 +27,8 @@ public class GrubMenuScreen extends ScreenAdapter {
         CREDITS,
         LICENSE
     }
+    
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
@@ -66,7 +70,7 @@ public class GrubMenuScreen extends ScreenAdapter {
 
                 for (var entry : lb.getScores()) {
                     leaderboardOptions.addItem(new MenuItem(
-                        entry.score() + " - " + entry.player() + "     [" + entry.time().toString() + "]",
+                        entry.score() + " - " + entry.player() + "     [" + entry.time().format(FORMATTER) + "]",
                         () -> {},
                         false)
                     );
