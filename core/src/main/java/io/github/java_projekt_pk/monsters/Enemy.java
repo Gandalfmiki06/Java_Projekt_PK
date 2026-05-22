@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.EnemyManager;
 import io.github.java_projekt_pk.globals.HurtTextGenerator;
-import io.github.java_projekt_pk.globals.RenderingGlobals;
 
 public class Enemy {
     static final float INITIAL_SCALE = 3.0f;
@@ -125,8 +125,8 @@ public class Enemy {
         batch.draw(currentFrame, x - (int) (width / 2), y, width, height);
 
         String renderString = getRenderString();
-        GlyphLayout layout = new GlyphLayout(RenderingGlobals.font, renderString);
-        RenderingGlobals.font.draw(batch, renderString, x - (int) (layout.width) / 2, y);
+        GlyphLayout layout = new GlyphLayout(Main.getFont(), renderString);
+        Main.getFont().draw(batch, renderString, x - (int) (layout.width) / 2, y);
     }
 
     public void setAnimation(String animationName) {

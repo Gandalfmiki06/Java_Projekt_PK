@@ -1,5 +1,7 @@
 package io.github.java_projekt_pk.Managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 
 public class InputManager extends InputAdapter {
@@ -22,5 +24,9 @@ public class InputManager extends InputAdapter {
         EnemyManager.enemies.get(EnemyManager.enemyPointer).typeCharacter(c);
 
         return true;
+    }
+    
+    public static boolean wasTabJustPressed() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.TAB);
     }
 }

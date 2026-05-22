@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import io.github.java_projekt_pk.FirstScreen;
 import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.FontManager;
 
@@ -168,7 +167,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         if (currentState == MenuState.MAIN_MENU) {
             switch (selectedIndex) {
                 case 0: // Start Game
-                    Main.getGameInstance().setScreen(new FirstScreen());
+                    Main.getGameInstance().setScreen(new InGameScreen());
                     break;
                 case 1: // Leaderboard
                     changeState(MenuState.LEADERBOARD);
