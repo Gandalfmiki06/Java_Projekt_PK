@@ -1,5 +1,7 @@
 package io.github.java_projekt_pk.Managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 
 import io.github.java_projekt_pk.Main;
@@ -61,5 +63,9 @@ public class InputManager extends InputAdapter {
             lastChar = c;
             Main.soundManager.playSfx(SoundManager.SfxNames.CLICK, 0.1f);
         }
+    }
+
+    public static boolean wasTabJustPressed() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.TAB);
     }
 }
