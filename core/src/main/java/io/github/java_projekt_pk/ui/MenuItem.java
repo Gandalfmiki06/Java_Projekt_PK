@@ -19,28 +19,37 @@ public class MenuItem implements Comparable<MenuItem> {
     }
 
     public MenuItem(String label) {
-        this(label, () -> {});
+        this(label, () -> {
+        });
     }
 
-    public String getLabel() { return label; }
-    public boolean isSelectable() { return selectable; }
+    public String getLabel() {
+        return label;
+    }
+
+    public boolean isSelectable() {
+        return selectable;
+    }
+
     public void executeAction() {
-        if(selectable) {
+        if (selectable) {
             action.execute();
         }
     }
 
     @Override
     public int compareTo(MenuItem o) {
-        if (o == null) return 1;
+        if (o == null)
+            return 1;
 
         int labelComp = Comparator.<String>nullsLast(Comparator.naturalOrder())
-            .compare(this.label, o.label);
-        if (labelComp != 0) return labelComp;
+                .compare(this.label, o.label);
+        if (labelComp != 0)
+            return labelComp;
 
         int selectablecomp = Boolean.compare(this.selectable, o.selectable);
-        if (selectablecomp != 0) return selectablecomp;
-
+        if (selectablecomp != 0)
+            return selectablecomp;
 
         return Integer.compare(Objects.hashCode(this.action), Objects.hashCode(o.action));
     }

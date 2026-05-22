@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-
 import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.FontManager;
 import io.github.java_projekt_pk.globals.Credits;
@@ -49,18 +49,36 @@ public class GrubMenuScreen extends ScreenAdapter {
 
         font = FontManager.generateFont("terminus", params);
 
-        mainMenuOptions = new Menu("Main Menu");
-        mainMenuOptions
-            .addItem(new MenuItem("Start Game", () -> Main.getGameInstance().setScreen(new InGameScreen())))
-            .addItem(new MenuItem("Leaderboard", () -> changeState(MenuState.LEADERBOARD)))
-            .addItem(new MenuItem("Credits", () -> changeState(MenuState.CREDITS)))
-            .addItem(new MenuItem("Licenses", () -> changeState(MenuState.LICENSE)))
-            .addItem(new MenuItem("Quit Game", () -> { Gdx.app.exit(); }));
-
         MenuItem backToMenuItem = new MenuItem("Back do menu", () -> changeState(MenuState.MAIN_MENU));
 
-        leaderboardOptions = new Menu("Leaderboards")
-            .addItem(backToMenuItem);
+        mainMenuOptions = new Menu("Main Menu")
+            .addItem(new MenuItem("Start Game", () -> Main.getGameInstance().setScreen(new InGameScreen())))
+            .addItem(new MenuItem("Leaderboard", () -> {
+                this.leaderboardOptions.clearItems();
+                this.leaderboardOptions.addItem(backToMenuItem);
+
+                var lb = Main.getLeaderboard();
+
+                leaderboardOptions.addItem(new MenuItem("Generate new Score", () -> {
+                    lb.addEntry("ANONYMOUS", MathUtils.random(0, 100000));
+                    lb.save();
+                }));
+
+                for (var entry : lb.getScores()) {
+                    leaderboardOptions.addItem(new MenuItem(
+                        entry.score() + " - " + entry.player() + "     [" + entry.time().toString() + "]",
+                        () -> {},
+                        false)
+                    );
+                }
+
+                changeState(MenuState.LEADERBOARD);
+            }))
+            .addItem(new MenuItem("Credits", () -> changeState(MenuState.CREDITS)))
+            .addItem(new MenuItem("Licenses", () -> changeState(MenuState.LICENSE)))
+            .addItem(new MenuItem("Quit Game", () -> Gdx.app.exit()));
+
+        leaderboardOptions = new Menu("Leaderboards");
 
         creditsOptions = new Menu("Credits")
             .addItem(backToMenuItem);
@@ -136,7 +154,7 @@ public class GrubMenuScreen extends ScreenAdapter {
             if (i == selectedIndex) {
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 shapeRenderer.setColor(Color.WHITE);
-                shapeRenderer.rect(itemX - TEXT_SPACE, itemBoxY - FONT_SIZE - TEXT_SPACE, boxWidth - TEXT_SPACE, FONT_SIZE + TEXT_SPACE);
+                shapeRenderer.rect(itemX - TEXT_SPACE, itemBoxY - FONT_SIZE - TEXT_SPACE, boxWidth, FONT_SIZE + TEXT_SPACE);
                 shapeRenderer.end();
 
                 break;

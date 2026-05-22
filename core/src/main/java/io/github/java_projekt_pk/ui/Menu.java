@@ -30,7 +30,9 @@ public class Menu {
         return items;
     }
 
-    public String getTitle() { return title; }
+    public String getTitle() {
+        return title;
+    }
 
     public void setSelectedIndex(int index) {
         currentIndex = MathUtils.clamp(index, 0, items.size - 1);
@@ -40,7 +42,7 @@ public class Menu {
         currentIndex = (currentIndex - 1 + items.size) % items.size;
         int iter = 0;
 
-        while(!getSelectedItem().isSelectable() && iter <= items.size){
+        while (!getSelectedItem().isSelectable() && iter <= items.size) {
             currentIndex = (currentIndex - 1 + items.size) % items.size;
             iter++;
         }
@@ -50,7 +52,7 @@ public class Menu {
         currentIndex = (currentIndex + 1) % items.size;
         int iter = 0;
 
-        while(!getSelectedItem().isSelectable() && iter <= items.size){
+        while (!getSelectedItem().isSelectable() && iter <= items.size) {
             currentIndex = (currentIndex + 1) % items.size;
             iter++;
         }
@@ -62,5 +64,9 @@ public class Menu {
 
     public int size() {
         return items.size;
+    }
+
+    public void clearItems() {
+        this.items.clear();
     }
 }
