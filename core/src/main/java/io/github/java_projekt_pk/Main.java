@@ -19,6 +19,8 @@ import io.github.java_projekt_pk.screens.GrubMenuScreen;
  */
 public class Main extends Game {
 
+    public static final int FONT_SIZE = 20;
+
     private static Main instance;
 
     private static TextureAtlas atlas;
@@ -43,7 +45,7 @@ public class Main extends Game {
         registerFonts();
 
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 20;
+        parameter.size = FONT_SIZE;
         parameter.color = Color.WHITE;
 
         font = FontManager.generateFont("terminus-bold", parameter);

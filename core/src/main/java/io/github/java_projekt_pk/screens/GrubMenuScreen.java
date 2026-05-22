@@ -18,7 +18,8 @@ public class GrubMenuScreen extends ScreenAdapter {
 
     private enum MenuState {
         MAIN_MENU,
-        LEADERBOARD
+        LEADERBOARD,
+        SETTINGS
     }
 
     private SpriteBatch batch;
@@ -29,6 +30,7 @@ public class GrubMenuScreen extends ScreenAdapter {
 
     private Array<String> mainMenuOptions;
     private Array<String> leaderboardOptions;
+    private Array<String> settingsOptions;
 
     private int selectedIndex = 0;
 
@@ -47,6 +49,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         mainMenuOptions = new Array<>();
         mainMenuOptions.add("Start Game");
         mainMenuOptions.add("Leaderboard");
+        mainMenuOptions.add("Settings");
         mainMenuOptions.add("Quit Game");
 
         leaderboardOptions = new Array<>();
@@ -54,6 +57,12 @@ public class GrubMenuScreen extends ScreenAdapter {
         leaderboardOptions.add("1. XDDD - 9999 pts");
         leaderboardOptions.add("2. LOL - 5400 pts");
         leaderboardOptions.add("3. KIT - 1200 pts");
+
+        settingsOptions = new Array<>();
+        settingsOptions.add("<- Back to Main Menu and Apply");
+        settingsOptions.add("Master Volume");
+        settingsOptions.add("Music Volume");
+        settingsOptions.add("Sfx Volume");
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -68,10 +77,7 @@ public class GrubMenuScreen extends ScreenAdapter {
                     return true;
                 }
                 if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
-                    selectedIndex++;
-                    if (selectedIndex >= currentListSize) {
-                        selectedIndex = 0;
-                    }
+                    selectedIndex = (selectedIndex + 1) % currentListSize;
                     return true;
                 }
                 if (keycode == Input.Keys.ENTER || keycode == Input.Keys.SPACE) {
@@ -79,10 +85,24 @@ public class GrubMenuScreen extends ScreenAdapter {
                     return true;
                 }
                 if (keycode == Input.Keys.ESCAPE) {
-                    if (currentState == MenuState.LEADERBOARD) {
+                    if (currentState == MenuState.LEADERBOARD || currentState == MenuState.SETTINGS) {
                         changeState(MenuState.MAIN_MENU);
                     }
                     return true;
+                }
+                if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.D)
+                {
+                    if (currentState == MenuState.SETTINGS)
+                    {
+                        modifySetting(true);
+                    }
+                }
+                if (keycode == Input.Keys.LEFT || keycode == Input.Keys.A)
+                {
+                    if (currentState == MenuState.SETTINGS)
+                    {
+                        modifySetting(false);
+                    }
                 }
                 return false;
             }
@@ -130,6 +150,16 @@ public class GrubMenuScreen extends ScreenAdapter {
         for (int i = 0; i < activeOptions.size; i++) {
             String itemText = activeOptions.get(i);
 
+            if (activeOptions == settingsOptions)
+            {
+                switch (i) {
+                    case 1 -> itemText = String.format("%-15s%s", itemText, getVolumeBar(Main.soundManager.MasterVolume));
+                    case 2 -> itemText = String.format("%-15s%s", itemText, getVolumeBar(Main.soundManager.MusicVolume));
+                    case 3 -> itemText = String.format("%-15s%s", itemText, getVolumeBar(Main.soundManager.SfxVolume));
+                    default -> {}
+                }
+            }
+
             if (i == selectedIndex) {
                 font.draw(batch, "[BLACK]" + itemText, itemX, itemY);
             } else {
@@ -139,10 +169,11 @@ public class GrubMenuScreen extends ScreenAdapter {
         }
 
         font.draw(batch, "GNU GRUB  version 2.06", 50, screenHeight - 50);
-        if (currentState == MenuState.MAIN_MENU) {
-            font.draw(batch, "Select an option to proceed.", 50, screenHeight - 90);
-        } else {
-            font.draw(batch, "GLOBAL LEADERBOARD - Top Scores", 50, screenHeight - 90);
+        switch (currentState) {
+            case MAIN_MENU -> font.draw(batch, "Select an option to proceed.", 50, screenHeight - 90);
+            case LEADERBOARD -> font.draw(batch, "GLOBAL LEADERBOARD - Top Scores", 50, screenHeight - 90);
+            case SETTINGS -> font.draw(batch, "Settings", 50, screenHeight - 90);
+            default -> {}
         }
 
         if (currentState == MenuState.MAIN_MENU) {
@@ -155,11 +186,12 @@ public class GrubMenuScreen extends ScreenAdapter {
     }
 
     private Array<String> getCurrentList() {
-        if (currentState == MenuState.MAIN_MENU) {
-            return mainMenuOptions;
-        } else {
-            return leaderboardOptions;
-        }
+        return switch (currentState) {
+            case MAIN_MENU -> mainMenuOptions;
+            case LEADERBOARD -> leaderboardOptions;
+            case SETTINGS -> settingsOptions;
+            default -> mainMenuOptions;
+        };
     }
 
     private void changeState(MenuState newState) {
@@ -168,23 +200,63 @@ public class GrubMenuScreen extends ScreenAdapter {
     }
 
     private void handleSelection() {
-        if (currentState == MenuState.MAIN_MENU) {
-            switch (selectedIndex) {
-                case 0: // Start Game
-                    Main.getGameInstance().setScreen(new InGameScreen());
-                    break;
-                case 1: // Leaderboard
-                    changeState(MenuState.LEADERBOARD);
-                    break;
-                case 2: // Quit Game
-                    Gdx.app.exit();
-                    break;
+        switch (currentState) {
+            case MAIN_MENU -> {
+                switch (selectedIndex) { // can't we change this to an enum or something like that so it's clear what option coresponds to what?
+                    case 0 -> Main.getGameInstance().setScreen(new InGameScreen());
+                    case 1 -> changeState(MenuState.LEADERBOARD);
+                    case 2 -> changeState(MenuState.SETTINGS);
+                    case 3 -> Gdx.app.exit();
+                }
             }
-        } else if (currentState == MenuState.LEADERBOARD) {
-            if (selectedIndex == 0) {
-                changeState(MenuState.MAIN_MENU);
+            case LEADERBOARD -> {
+                if (selectedIndex == 0) {
+                    changeState(MenuState.MAIN_MENU);
+                }
+            }
+            case SETTINGS -> {
+                switch (selectedIndex) {
+                    case 0 -> {
+                        changeState(MenuState.MAIN_MENU);
+                    }
+                }
             }
         }
+    }
+
+    private void modifySetting(boolean increase)
+    {
+        switch (selectedIndex) {
+            case 1 -> Main.soundManager.MasterVolume += increase ? 0.05f : -0.05f;
+            case 2 -> Main.soundManager.MusicVolume += increase ? 0.05f : -0.05f;
+            case 3 -> Main.soundManager.SfxVolume += increase ? 0.05f : -0.05f;
+        }
+
+        Main.soundManager.MasterVolume = Math.clamp(Main.soundManager.MasterVolume, 0, 1);
+        Main.soundManager.MusicVolume = Math.clamp(Main.soundManager.MusicVolume, 0, 1);
+        Main.soundManager.SfxVolume = Math.clamp(Main.soundManager.SfxVolume, 0, 1);
+
+        Main.soundManager.updateVolume();
+    }
+
+    private String getVolumeBar(float volume)
+    {
+        int filled = Math.round(volume * 20);
+        StringBuilder bar = new StringBuilder("[[");
+
+        for (int i = 0; i < 20; i++) {
+            if (i < filled) {
+                bar.append('|');
+            } else {
+                bar.append('-');
+            }
+        }
+
+        bar.append("] ");
+        bar.append(Math.round(volume*100));
+        bar.append('%');
+
+        return bar.toString();
     }
 
     @Override
