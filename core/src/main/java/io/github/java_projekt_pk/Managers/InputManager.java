@@ -10,13 +10,13 @@ public class InputManager extends InputAdapter {
             return false;
         }
 
+        if ((c < 32 && c != '\b') || c >= 127 /* delete key and regional characters */) {
+            return false;
+        }
+
         if (c == '\b') {
             EnemyManager.enemies.get(EnemyManager.enemyPointer).backspace();
             return true;
-        }
-
-        if (c < 32 || c == 127 /* delete key */) {
-            return false;
         }
 
         EnemyManager.enemies.get(EnemyManager.enemyPointer).typeCharacter(c);

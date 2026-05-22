@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.EnemyManager;
+import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.globals.HurtTextGenerator;
 import io.github.java_projekt_pk.globals.RenderingGlobals;
 
@@ -104,6 +106,7 @@ public class Enemy {
 
     public void typeCharacter(char c) {
         inputText += c;
+        Main.soundManager.playSfx(SoundManager.SfxNames.CLICK, 0.1f);
         if (inputText.equals(hurtText))
             hurt();
     }
@@ -111,6 +114,7 @@ public class Enemy {
     public void backspace() {
         if (!inputText.isEmpty()) {
             inputText = inputText.substring(0, inputText.length() - 1);
+            Main.soundManager.playSfx(SoundManager.SfxNames.CLICK, 0.1f);
         }
     }
 
