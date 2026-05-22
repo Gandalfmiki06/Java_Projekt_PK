@@ -1,6 +1,7 @@
 package io.github.java_projekt_pk.monsters;
 
 public class Slime extends Enemy {
+
     private final SlimeSpecies species;
 
     public Slime(SlimeSpecies species) {

@@ -10,8 +10,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.java_projekt_pk.SpriteAnimation;
 
 public class SlimeSpecies {
-    public static final String[] animationNames = { "Idle", "Walk", "Run", "Jump", "Hurt", "Attack1", "Attack2",
-            "Attack3", "Run+Attack", "Dead" };
+
+    public static final String[] animationNames = {"Idle", "Walk", "Run", "Jump", "Hurt", "Attack1", "Attack2",
+        "Attack3", "Run+Attack", "Dead"};
     Map<String, Animation<TextureRegion>> animations;
 
     public SlimeSpecies(TextureAtlas atlas, String species) {

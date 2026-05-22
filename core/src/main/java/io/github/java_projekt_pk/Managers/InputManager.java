@@ -27,8 +27,7 @@ public class InputManager extends InputAdapter {
     }
 
     @Override
-    public boolean keyUp(int c)
-    {
+    public boolean keyUp(int c) {
         lastChar = 0;
         return true;
     }
@@ -36,30 +35,24 @@ public class InputManager extends InputAdapter {
     private void typeCharacter(char c) {
         Enemy enemy = EnemyManager.enemies.get(EnemyManager.enemyPointer);
 
-        if (c == '\b')
-        {
+        if (c == '\b') {
             if (!enemy.inputText.isEmpty()) {
                 enemy.inputText = enemy.inputText.substring(0, enemy.inputText.length() - 1);
                 playClickSound(c);
             }
-        }
-        else
-        {
+        } else {
             enemy.inputText += c;
             playClickSound(c);
 
-            if (enemy.inputText.equals(enemy.hurtText))
-            {
+            if (enemy.inputText.equals(enemy.hurtText)) {
                 enemy.hurt();
             }
         }
 
     }
 
-    private void playClickSound(char c)
-    {
-        if (c != lastChar)
-        {
+    private void playClickSound(char c) {
+        if (c != lastChar) {
             lastChar = c;
             Main.soundManager.playSfx(SoundManager.SfxNames.CLICK, 0.1f);
         }

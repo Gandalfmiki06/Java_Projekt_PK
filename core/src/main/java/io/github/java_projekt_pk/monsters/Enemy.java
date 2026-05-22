@@ -12,6 +12,7 @@ import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.globals.HurtTextGenerator;
 
 public class Enemy {
+
     static final float INITIAL_SCALE = 3.0f;
     protected float x = 0.0f;
     protected float y = 0.0f;
@@ -42,8 +43,9 @@ public class Enemy {
         if (health > 0) {
             hurtText = HurtTextGenerator.getRandomText();
             inputText = "";
-        } else
+        } else {
             die();
+        }
     }
 
     private void die() {
@@ -98,8 +100,9 @@ public class Enemy {
     }
 
     protected String getRenderString() {
-        if (!selected)
+        if (!selected) {
             return hurtText;
+        }
 
         StringBuilder result = new StringBuilder();
 
@@ -149,8 +152,9 @@ public class Enemy {
 
     public void typeCharacter(char c) {
         inputText += c;
-        if (inputText.equals(hurtText))
+        if (inputText.equals(hurtText)) {
             hurt();
+        }
     }
 
     public void backspace() {

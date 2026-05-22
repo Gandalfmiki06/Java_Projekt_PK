@@ -14,9 +14,11 @@ import io.github.java_projekt_pk.monsters.SlimeSpecies;
 import io.github.java_projekt_pk.screens.GrubMenuScreen;
 
 /**
- * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
+ * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
+ * platforms.
  */
 public class Main extends Game {
+
     private static Main instance;
 
     private static TextureAtlas atlas;

@@ -1,5 +1,8 @@
 package io.github.java_projekt_pk.screens;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,12 +16,10 @@ import io.github.java_projekt_pk.globals.SystemDText;
 import io.github.java_projekt_pk.monsters.Enemy;
 import io.github.java_projekt_pk.monsters.Slime;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class InGameScreen implements Screen {
+
     private BitmapFont font;
-    
+
     private float time;
 
     private InputManager inputManager;
@@ -58,15 +59,16 @@ public class InGameScreen implements Screen {
         EnemyManager.enemies.add(slime5);
 
         EnemyManager.selectNextEnemy();
-        
+
         font = Main.getFont();
     }
 
     private void nextRandomText() {
         activeTexts.add(SystemDText.randomText());
 
-        if (activeTexts.size() > 128)
+        if (activeTexts.size() > 128) {
             activeTexts.removeFirst();
+        }
 
         timeSinceLastText -= nextTextDelay;
         nextTextDelay = MathUtils.random(0.2f, 1.0f);
@@ -80,7 +82,7 @@ public class InGameScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
-        
+
         if (InputManager.wasTabJustPressed()) {
             EnemyManager.selectNextEnemy();
         }
@@ -90,7 +92,7 @@ public class InGameScreen implements Screen {
         if (timeSinceLastText >= nextTextDelay && nextTextDelay > 0) {
             nextRandomText();
         }
-        
+
         var spriteBatch = Main.getSpriteBatch();
 
         spriteBatch.begin();
@@ -100,7 +102,7 @@ public class InGameScreen implements Screen {
             font.draw(spriteBatch, String.format("[ %s [WHITE]] %s", "[GREEN]OK", text), 30, yPosition);
             yPosition += 30;
         }
-        
+
         for (Enemy enemy : EnemyManager.enemies) {
             enemy.draw(spriteBatch, time);
         }
@@ -130,6 +132,6 @@ public class InGameScreen implements Screen {
 
     @Override
     public void dispose() {
-        
+
     }
 }
