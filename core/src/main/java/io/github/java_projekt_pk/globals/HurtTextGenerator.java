@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class HurtTextGenerator {
+
     private static final Random RANDOM = new Random();
 
     private static final List<String> possibleWords = Arrays.asList("public", "static", "final");

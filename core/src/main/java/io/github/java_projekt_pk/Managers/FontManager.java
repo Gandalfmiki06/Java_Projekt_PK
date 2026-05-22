@@ -52,4 +52,10 @@ public class FontManager {
         parameter.color = Color.WHITE;
         return parameter;
     }
+    
+    public static void dispose() {
+        for (var font : fontMap.values()) {
+            font.dispose();
+        }
+    }
 }

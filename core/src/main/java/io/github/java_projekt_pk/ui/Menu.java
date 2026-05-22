@@ -1,11 +1,7 @@
 package io.github.java_projekt_pk.ui;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Menu {
     private final Array<MenuItem> items = new Array<>();
@@ -18,7 +14,6 @@ public class Menu {
 
     public Menu addItem(MenuItem item) {
         items.add(item);
-
 
         return this;
     }

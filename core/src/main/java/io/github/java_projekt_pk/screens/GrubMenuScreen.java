@@ -10,16 +10,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import io.github.java_projekt_pk.FirstScreen;
+
 import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.FontManager;
 import io.github.java_projekt_pk.globals.Credits;
 import io.github.java_projekt_pk.ui.Menu;
 import io.github.java_projekt_pk.ui.MenuItem;
 
-import java.util.List;
-
 public class GrubMenuScreen extends ScreenAdapter {
+
     private enum MenuState {
         MAIN_MENU,
         LEADERBOARD,
@@ -63,23 +62,12 @@ public class GrubMenuScreen extends ScreenAdapter {
         leaderboardOptions = new Menu("Leaderboards")
             .addItem(backToMenuItem);
 
-        Array<String> tempLeaderboard = new Array<>();
-        tempLeaderboard.add("1. KIT - 9999 pts");
-        tempLeaderboard.add("2. FLAPPERS - 5400 pts");
-        tempLeaderboard.add("3. KABOODLE - 1200 pts");
-        tempLeaderboard.add("4. SNAPPERS - 825 pts");
-
-        for (var txt : tempLeaderboard) {
-            leaderboardOptions.addItem(new MenuItem(txt, () -> {}, false));
-        }
-
         creditsOptions = new Menu("Credits")
             .addItem(backToMenuItem);
 
         for (var txt : Credits.authors) {
             creditsOptions.addItem(new MenuItem(txt, () -> {}, false));
         }
-
 
         licensesOptions = new Menu("Licenses")
             .addItem(backToMenuItem);
