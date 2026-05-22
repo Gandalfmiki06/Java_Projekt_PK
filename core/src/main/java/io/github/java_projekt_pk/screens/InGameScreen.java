@@ -10,6 +10,8 @@ import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.EnemyManager;
 import io.github.java_projekt_pk.Managers.InputManager;
 import io.github.java_projekt_pk.globals.SystemDText;
+import io.github.java_projekt_pk.hud.Hud;
+
 import io.github.java_projekt_pk.monsters.Enemy;
 import io.github.java_projekt_pk.monsters.Slime;
 
@@ -22,6 +24,8 @@ public class InGameScreen implements Screen {
     private float time;
 
     private InputManager inputManager;
+    
+    private Hud hud;
 
     private List<String> activeTexts = new ArrayList<>();
     private float nextTextDelay = MathUtils.random(0.5f, 3.0f);
@@ -59,6 +63,7 @@ public class InGameScreen implements Screen {
 
         EnemyManager.selectNextEnemy();
         
+        hud = new Hud(Main.getTextureAtlas());
         font = Main.getFont();
     }
 
@@ -104,6 +109,9 @@ public class InGameScreen implements Screen {
         for (Enemy enemy : EnemyManager.enemies) {
             enemy.draw(spriteBatch, time);
         }
+
+        hud.timeStep(delta);
+        hud.draw(spriteBatch);
 
         spriteBatch.end();
     }
