@@ -7,7 +7,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Comparator;
 
@@ -78,7 +77,7 @@ public class Leaderboard {
     public void save() {
         try (var writer = new BufferedWriter(new FileWriter(path.toFile()))) {
             for (var entry : entries) {
-                String b = entry.player + ";" + entry.score + ";" + entry.time.atZone(ZoneId.systemDefault()).toEpochSecond() + "\n";
+                String b = entry.player + ";" + entry.score + ";" + entry.time.toEpochSecond(ZoneOffset.UTC) + "\n";
 
                 writer.write(b);
             }
