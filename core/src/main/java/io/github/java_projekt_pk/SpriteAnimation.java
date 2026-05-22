@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class SpriteAnimation {
+
     public static Animation<TextureRegion> fromAtlas(TextureAtlas atlas, String name) {
         var region = atlas.findRegion(name);
         if (region == null) {

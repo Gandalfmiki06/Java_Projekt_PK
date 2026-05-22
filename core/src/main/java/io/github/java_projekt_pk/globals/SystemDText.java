@@ -3,6 +3,7 @@ package io.github.java_projekt_pk.globals;
 import java.util.Random;
 
 public class SystemDText {
+
     public static final String[] SYSTEMD_SERVICES = {
         // Core System & Kernel
         "Load Kernel Modules",
@@ -15,7 +16,6 @@ public class SystemDText {
         "Create Volatile Files and Directories",
         "Flush Journal to Persistent Storage",
         "Update UTMP about System Boot/Shutdown",
-
         // Hardware & Device Management
         "udev Kernel Device Manager",
         "udev Coldplug all Devices",
@@ -25,7 +25,6 @@ public class SystemDText {
         "RealtimeKit Scheduling Policy Service",
         "Disk Manager",
         "Entropy Daemon using the HAVEGE algorithm",
-
         // Networking & Connectivity
         "Network Service",
         "Network Configuration",
@@ -39,7 +38,6 @@ public class SystemDText {
         "Bluetooth service",
         "OpenSSH server daemon",
         "Firewall Administration Tool",
-
         // User Space & Security
         "D-Bus System Message Bus",
         "User Login Management",
@@ -50,7 +48,6 @@ public class SystemDText {
         "Gnome Display Manager",
         "Light Display Manager",
         "Simple Desktop Display Manager",
-
         // Background Processes & Maintenance
         "Regular background program processing daemon",
         "Daily Cleanup of Temporary Directories",
@@ -60,7 +57,6 @@ public class SystemDText {
         "System Logging Service",
         "LM-Sensors daemon",
         "TLP system startup/shutdown",
-
         // Finalization
         "Hold until boot process finishes up",
         "Terminate Plymouth Boot Screen",

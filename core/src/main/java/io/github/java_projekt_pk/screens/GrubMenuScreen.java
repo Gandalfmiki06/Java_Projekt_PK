@@ -10,10 +10,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+
 import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.FontManager;
 
 public class GrubMenuScreen extends ScreenAdapter {
+
     private enum MenuState {
         MAIN_MENU,
         LEADERBOARD
@@ -60,14 +62,16 @@ public class GrubMenuScreen extends ScreenAdapter {
 
                 if (keycode == Input.Keys.UP || keycode == Input.Keys.W) {
                     selectedIndex--;
-                    if (selectedIndex < 0)
+                    if (selectedIndex < 0) {
                         selectedIndex = currentListSize - 1;
+                    }
                     return true;
                 }
                 if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
                     selectedIndex++;
-                    if (selectedIndex >= currentListSize)
+                    if (selectedIndex >= currentListSize) {
                         selectedIndex = 0;
+                    }
                     return true;
                 }
                 if (keycode == Input.Keys.ENTER || keycode == Input.Keys.SPACE) {
