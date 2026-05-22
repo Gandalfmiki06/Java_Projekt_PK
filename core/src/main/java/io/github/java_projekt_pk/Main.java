@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
-import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.Managers.FontManager;
+import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.monsters.SlimeSpecies;
 import io.github.java_projekt_pk.screens.GrubMenuScreen;
 
@@ -44,7 +44,7 @@ public class Main extends Game {
         parameter.size = 20;
         parameter.color = Color.WHITE;
 
-        font = FontManager.generateFont("google", parameter);
+        font = FontManager.generateFont("terminus-bold", parameter);
 
         atlas = new TextureAtlas(Gdx.files.internal("texture_atlas.atlas"));
 

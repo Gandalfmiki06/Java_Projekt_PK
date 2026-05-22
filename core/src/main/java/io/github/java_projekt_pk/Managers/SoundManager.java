@@ -19,7 +19,9 @@ public class SoundManager {
 
     public static enum SfxNames
     {
-        CLICK
+        CLICK,
+        DAMAGE_ENEMY,
+        DEATH_ENEMY
     }
 
     public static enum MusicNames
@@ -31,6 +33,12 @@ public class SoundManager {
     {
         Sound sfx = Gdx.audio.newSound(Gdx.files.internal("audio/click.wav"));
         soundEffects.put(SfxNames.CLICK, sfx);
+
+        sfx = Gdx.audio.newSound(Gdx.files.internal("audio/damage.wav"));
+        soundEffects.put(SfxNames.DAMAGE_ENEMY, sfx);
+
+        sfx = Gdx.audio.newSound(Gdx.files.internal("audio/death.wav"));
+        soundEffects.put(SfxNames.DEATH_ENEMY, sfx);
 
         //Music bgm = Gdx.audio.newMusic(Gdx.files.internal("audio/music.wav"));
         //music.put(MusicNames.MAIN_THEME, bgm);
