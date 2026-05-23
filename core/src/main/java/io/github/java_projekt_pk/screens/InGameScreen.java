@@ -18,15 +18,17 @@ import io.github.java_projekt_pk.monsters.Slime;
 
 public class InGameScreen implements Screen {
 
-    private BitmapFont font;
+    private final BitmapFont font;
+    private final int fontOffset = Math.round(Main.FONT_SIZE * 0.75f);
 
     private float time;
 
-    private InputManager inputManager;
+    private final InputManager inputManager;
 
-    private List<String> activeTexts = new ArrayList<>();
+    private final List<String> activeTexts = new ArrayList<>();
     private float nextTextDelay = MathUtils.random(0.5f, 3.0f);
     private float timeSinceLastText = 0.f;
+
 
     public InGameScreen() {
         inputManager = new InputManager();
@@ -66,12 +68,12 @@ public class InGameScreen implements Screen {
     private void nextRandomText() {
         activeTexts.add(SystemDText.randomText());
 
-        if (activeTexts.size() > 128) {
+        if (activeTexts.size() > Gdx.graphics.getHeight() / fontOffset) {
             activeTexts.removeFirst();
         }
 
         timeSinceLastText -= nextTextDelay;
-        nextTextDelay = MathUtils.random(0.2f, 1.0f);
+        nextTextDelay = MathUtils.random(0.1f, 0.2f);
     }
 
     @Override
@@ -97,10 +99,10 @@ public class InGameScreen implements Screen {
 
         spriteBatch.begin();
 
-        int yPosition = 50;
-        for (String text : activeTexts.reversed()) {
-            font.draw(spriteBatch, String.format("[ %s [WHITE]] %s", "[GREEN]OK", text), 30, yPosition);
-            yPosition += 30;
+        int yPosition = Gdx.graphics.getHeight();
+        for (String text : activeTexts) {
+            font.draw(spriteBatch, String.format("[WHITE][[ %s ] %s", "[GREEN]OK[]", text), 30, yPosition);
+            yPosition -= fontOffset;
         }
 
         for (Enemy enemy : EnemyManager.enemies) {

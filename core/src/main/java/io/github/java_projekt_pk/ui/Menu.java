@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 public class Menu {
-    private final Array<MenuItem> items = new Array<>();
-    private int currentIndex = 0;
+    protected final Array<MenuItem> items = new Array<>();
+    protected int currentIndex = 0;
     private final String title;
 
     public Menu(String title) {
@@ -56,6 +56,14 @@ public class Menu {
             currentIndex = (currentIndex + 1) % items.size;
             iter++;
         }
+    }
+    
+    public void leftPressed() {
+        
+    }
+    
+    public void rightPressed() {
+        
     }
 
     public void executeCurrentSelection() {

@@ -18,11 +18,13 @@ import io.github.java_projekt_pk.Managers.FontManager;
 import io.github.java_projekt_pk.globals.Credits;
 import io.github.java_projekt_pk.ui.Menu;
 import io.github.java_projekt_pk.ui.MenuItem;
+import io.github.java_projekt_pk.ui.SettingsMenu;
 
 public class GrubMenuScreen extends ScreenAdapter {
 
     private enum MenuState {
         MAIN_MENU,
+        SETTINGS,
         LEADERBOARD,
         CREDITS,
         LICENSE
@@ -37,6 +39,7 @@ public class GrubMenuScreen extends ScreenAdapter {
     private MenuState currentState = MenuState.MAIN_MENU;
 
     private Menu mainMenuOptions;
+    private Menu settingsOptions;
     private Menu leaderboardOptions;
     private Menu creditsOptions;
     private Menu licensesOptions;
@@ -57,6 +60,9 @@ public class GrubMenuScreen extends ScreenAdapter {
 
         mainMenuOptions = new Menu("Main Menu")
             .addItem(new MenuItem("Start Game", () -> Main.getGameInstance().setScreen(new InGameScreen())))
+            .addItem(new MenuItem("Settings", () -> {
+                changeState(MenuState.SETTINGS);
+             }))
             .addItem(new MenuItem("Leaderboard", () -> {
                 this.leaderboardOptions.clearItems();
                 this.leaderboardOptions.addItem(backToMenuItem);
@@ -82,6 +88,8 @@ public class GrubMenuScreen extends ScreenAdapter {
             .addItem(new MenuItem("Credits", () -> changeState(MenuState.CREDITS)))
             .addItem(new MenuItem("Licenses", () -> changeState(MenuState.LICENSE)))
             .addItem(new MenuItem("Quit Game", () -> Gdx.app.exit()));
+        
+        settingsOptions = new SettingsMenu(backToMenuItem);
 
         leaderboardOptions = new Menu("Leaderboards");
 
@@ -107,16 +115,19 @@ public class GrubMenuScreen extends ScreenAdapter {
                 if (keycode == Input.Keys.UP || keycode == Input.Keys.W) {
                     menu.moveSelectionUp();
                     return true;
-                }
-                if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
+                } else if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
                     menu.moveSelectionDown();
                     return true;
-                }
-                if (keycode == Input.Keys.ENTER || keycode == Input.Keys.SPACE) {
+                } else if (keycode == Input.Keys.LEFT || keycode == Input.Keys.A) {
+                    menu.leftPressed();
+                    return true;
+                } else if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.D) {
+                    menu.rightPressed();
+                    return true;
+                } else if (keycode == Input.Keys.ENTER || keycode == Input.Keys.SPACE) {
                     menu.executeCurrentSelection();
                     return true;
-                }
-                if (keycode == Input.Keys.ESCAPE) {
+                } else if (keycode == Input.Keys.ESCAPE) {
                     if (currentState != MenuState.MAIN_MENU) {
                         changeState(MenuState.MAIN_MENU);
                     }
@@ -196,6 +207,8 @@ public class GrubMenuScreen extends ScreenAdapter {
     private Menu getCurrentMenu() {
         if (currentState == MenuState.MAIN_MENU) {
             return mainMenuOptions;
+        } else if (currentState == MenuState.SETTINGS) {
+            return settingsOptions;
         } else if (currentState == MenuState.LEADERBOARD) {
             return leaderboardOptions;
         } else if (currentState == MenuState.CREDITS) {
