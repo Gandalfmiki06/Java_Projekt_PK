@@ -101,12 +101,11 @@ public class Enemy {
 
     protected String getRenderString() {
         if (!selected) {
-            return hurtText;
+            return String.format("[GRAY]%s[]", hurtText);
         }
 
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(">");
 
-        result.append("[WHITE]>");
         TextColor color = TextColor.WHITE;
 
         int maxLen = Math.max(inputText.length(), hurtText.length());
@@ -137,7 +136,7 @@ public class Enemy {
             result.append(escapeMarkup(nextChar));
         }
 
-        result.append("[][]");
+        result.append("[]");
 
         return result.toString();
     }

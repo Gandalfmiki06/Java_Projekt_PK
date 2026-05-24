@@ -59,7 +59,18 @@ public class Hud {
         drawHealthBar(spriteBatch);
         drawScoreText(spriteBatch);
     }
+    
+    public void addScore(int score) {
+        this.score += score;
+        updateScore();
+    }
 
+    public void damage() {
+        health -= 1;
+        damaged = true;
+        timeSinceDamage = 0.0f;
+    }
+    
     private void drawHealthBar(SpriteBatch spriteBatch) {
         for (int i = 0; i < PLAYER_HEALTH; i++) {
             AtlasRegion heartType;
@@ -75,17 +86,6 @@ public class Hud {
                             - (PLAYER_HEALTH - i - 1) * (HEART_SIZE + HEART_MARGIN),
                     Gdx.graphics.getHeight() - HEALTH_BAR_OFFSET_Y, HEART_SIZE, HEART_SIZE);
         }
-    }
-    
-    public void addScore(int score) {
-        this.score += score;
-        updateScore();
-    }
-
-    public void damage() {
-        health -= 1;
-        damaged = true;
-        timeSinceDamage = 0.0f;
     }
     
     private void updateScore() {

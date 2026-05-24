@@ -11,9 +11,9 @@ public class SoundManager {
     public HashMap<SfxNames, Sound> soundEffects = new HashMap<>();
     public HashMap<MusicNames, Music> music = new HashMap<>();
 
-    public static float MasterVolume = 1;
-    public static float MusicVolume = 0.5f;
-    public static float SfxVolume = 0.5f;
+    public float MasterVolume = 1;
+    public float MusicVolume = 0.5f;
+    public float SfxVolume = 0.5f;
 
     private final float VOLUME_SCALE = 0.5f;
 
@@ -72,5 +72,16 @@ public class SoundManager {
     {
         music.get(bgm).play();
         music.get(bgm).setVolume(MusicVolume * MasterVolume * VOLUME_SCALE);
+    }
+
+    public void updateVolume()
+    {
+        for (Music entry : music.values())
+        {
+            if (entry.isPlaying())
+            {
+                entry.setVolume(MusicVolume * MasterVolume * VOLUME_SCALE);
+            }
+        }
     }
 }
