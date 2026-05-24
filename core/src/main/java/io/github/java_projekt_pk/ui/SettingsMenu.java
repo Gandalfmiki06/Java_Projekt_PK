@@ -2,24 +2,26 @@ package io.github.java_projekt_pk.ui;
 
 import io.github.java_projekt_pk.Main;
 
-public class SettingsMenu extends Menu {
-    
-    private MenuItem backToMenuItem;
-    
+public final class SettingsMenu extends Menu {
+
+    private final MenuItem backToMenuItem;
+
     public SettingsMenu(MenuItem backToMenuItem) {
         super("Settings");
         this.backToMenuItem = backToMenuItem;
         generateItems();
     }
-    
+
+    @Override
     public void leftPressed() {
         modifySetting(false);
     }
-    
+
+    @Override
     public void rightPressed() {
         modifySetting(true);
     }
-    
+
     public void generateItems() {
         addItem(backToMenuItem);
         addItem(new MenuItem(String.format("%-15s%s", "Master volume",
@@ -29,7 +31,7 @@ public class SettingsMenu extends Menu {
         addItem(new MenuItem(String.format("%-15s%s", "Sfx Volume",
                 getVolumeBar(Main.soundManager.SfxVolume)), () -> { }, true));
     }
-    
+
     private String getVolumeBar(float volume)
     {
         int filled = Math.round(volume * 20);
@@ -49,7 +51,7 @@ public class SettingsMenu extends Menu {
 
         return bar.toString();
     }
-    
+
     private void modifySetting(boolean increase)
     {
         switch (currentIndex) {

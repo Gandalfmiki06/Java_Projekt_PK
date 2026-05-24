@@ -1,5 +1,8 @@
 package io.github.java_projekt_pk;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -13,16 +16,13 @@ import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.monsters.SlimeSpecies;
 import io.github.java_projekt_pk.screens.GrubMenuScreen;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
  * platforms.
  */
 public class Main extends Game {
 
-    public static final int FONT_SIZE = 20;
+    public static final int FONT_SIZE = 16;
 
     private static Main instance;
 

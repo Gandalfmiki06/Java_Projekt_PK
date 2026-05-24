@@ -16,7 +16,7 @@ public class SlimeSpecies {
     Map<String, Animation<TextureRegion>> animations;
 
     public SlimeSpecies(TextureAtlas atlas, String species) {
-        animations = new HashMap<String, Animation<TextureRegion>>();
+        animations = new HashMap<>();
         for (var animation : animationNames) {
             animations.put(animation, SpriteAnimation.fromAtlas(atlas, species + "/" + animation));
         }

@@ -1,16 +1,20 @@
 package io.github.java_projekt_pk;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Comparator;
 
-public class Leaderboard {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
+
+public final class Leaderboard {
     private final int maxSize;
     private final Path path;
     private final Array<PlayerScore> entries = new Array<>();

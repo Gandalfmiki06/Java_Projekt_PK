@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+
 import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.FontManager;
 import io.github.java_projekt_pk.globals.Credits;
@@ -29,7 +30,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         CREDITS,
         LICENSE
     }
-    
+
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private SpriteBatch batch;
@@ -59,52 +60,55 @@ public class GrubMenuScreen extends ScreenAdapter {
         MenuItem backToMenuItem = new MenuItem("Back do menu", () -> changeState(MenuState.MAIN_MENU));
 
         mainMenuOptions = new Menu("Main Menu")
-            .addItem(new MenuItem("Start Game", () -> Main.getGameInstance().setScreen(new InGameScreen())))
-            .addItem(new MenuItem("Settings", () -> {
-                changeState(MenuState.SETTINGS);
-             }))
-            .addItem(new MenuItem("Leaderboard", () -> {
-                this.leaderboardOptions.clearItems();
-                this.leaderboardOptions.addItem(backToMenuItem);
+                .addItem(new MenuItem("Start Game", () -> Main.getGameInstance().setScreen(new InGameScreen())))
+                .addItem(new MenuItem("Settings", () -> {
+                    changeState(MenuState.SETTINGS);
+                }))
+                .addItem(new MenuItem("Leaderboard", () -> {
+                    this.leaderboardOptions.clearItems();
+                    this.leaderboardOptions.addItem(backToMenuItem);
 
-                var lb = Main.getLeaderboard();
+                    var lb = Main.getLeaderboard();
 
-                leaderboardOptions.addItem(new MenuItem("[DEBUG] Generate new random Score", () -> {
-                    lb.addEntry("ANONYMOUS", MathUtils.random(0, 100000));
-                    lb.save();
-                    changeState(MenuState.MAIN_MENU);
-                }));
+                    leaderboardOptions.addItem(new MenuItem("[DEBUG] Generate new random Score", () -> {
+                        lb.addEntry("ANONYMOUS", MathUtils.random(0, 100000));
+                        lb.save();
+                        changeState(MenuState.MAIN_MENU);
+                    }));
 
-                for (var entry : lb.getScores()) {
-                    leaderboardOptions.addItem(new MenuItem(
-                        entry.score() + " - " + entry.player() + "     [" + entry.time().format(FORMATTER) + "]",
-                        () -> {},
-                        false)
-                    );
-                }
+                    for (var entry : lb.getScores()) {
+                        leaderboardOptions.addItem(new MenuItem(
+                                entry.score() + " - " + entry.player() + "     [" + entry.time().format(FORMATTER) + "]",
+                                () -> {
+                                },
+                                false)
+                        );
+                    }
 
-                changeState(MenuState.LEADERBOARD);
-            }))
-            .addItem(new MenuItem("Credits", () -> changeState(MenuState.CREDITS)))
-            .addItem(new MenuItem("Licenses", () -> changeState(MenuState.LICENSE)))
-            .addItem(new MenuItem("Quit Game", () -> Gdx.app.exit()));
-        
+                    changeState(MenuState.LEADERBOARD);
+                }))
+                .addItem(new MenuItem("Credits", () -> changeState(MenuState.CREDITS)))
+                .addItem(new MenuItem("Licenses", () -> changeState(MenuState.LICENSE)))
+                .addItem(new MenuItem("Quit Game", () -> Gdx.app.exit()));
+
         settingsOptions = new SettingsMenu(backToMenuItem);
 
         leaderboardOptions = new Menu("Leaderboards");
 
         creditsOptions = new Menu("Credits")
-            .addItem(backToMenuItem);
+                .addItem(backToMenuItem);
 
         for (var txt : Credits.authors) {
-            creditsOptions.addItem(new MenuItem(txt, () -> {}, false));
+            creditsOptions.addItem(new MenuItem(txt, () -> {
+            }, false));
         }
 
         licensesOptions = new Menu("Licenses")
-            .addItem(backToMenuItem);
+                .addItem(backToMenuItem);
 
         for (var txt : Credits.licenses) {
-            licensesOptions.addItem(new MenuItem(txt, () -> {}, false));
+            licensesOptions.addItem(new MenuItem(txt, () -> {
+            }, false));
         }
 
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -112,26 +116,35 @@ public class GrubMenuScreen extends ScreenAdapter {
             public boolean keyDown(int keycode) {
                 Menu menu = getCurrentMenu();
 
-                if (keycode == Input.Keys.UP || keycode == Input.Keys.W) {
-                    menu.moveSelectionUp();
-                    return true;
-                } else if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
-                    menu.moveSelectionDown();
-                    return true;
-                } else if (keycode == Input.Keys.LEFT || keycode == Input.Keys.A) {
-                    menu.leftPressed();
-                    return true;
-                } else if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.D) {
-                    menu.rightPressed();
-                    return true;
-                } else if (keycode == Input.Keys.ENTER || keycode == Input.Keys.SPACE) {
-                    menu.executeCurrentSelection();
-                    return true;
-                } else if (keycode == Input.Keys.ESCAPE) {
-                    if (currentState != MenuState.MAIN_MENU) {
-                        changeState(MenuState.MAIN_MENU);
+                switch (keycode) {
+                    case Input.Keys.UP, Input.Keys.W -> {
+                        menu.moveSelectionUp();
+                        return true;
                     }
-                    return true;
+                    case Input.Keys.DOWN, Input.Keys.S -> {
+                        menu.moveSelectionDown();
+                        return true;
+                    }
+                    case Input.Keys.LEFT, Input.Keys.A -> {
+                        menu.leftPressed();
+                        return true;
+                    }
+                    case Input.Keys.RIGHT, Input.Keys.D -> {
+                        menu.rightPressed();
+                        return true;
+                    }
+                    case Input.Keys.ENTER, Input.Keys.SPACE -> {
+                        menu.executeCurrentSelection();
+                        return true;
+                    }
+                    case Input.Keys.ESCAPE -> {
+                        if (currentState != MenuState.MAIN_MENU) {
+                            changeState(MenuState.MAIN_MENU);
+                        }
+                        return true;
+                    }
+                    default -> {
+                    }
                 }
                 return false;
             }
@@ -205,19 +218,20 @@ public class GrubMenuScreen extends ScreenAdapter {
     }
 
     private Menu getCurrentMenu() {
-        if (currentState == MenuState.MAIN_MENU) {
-            return mainMenuOptions;
-        } else if (currentState == MenuState.SETTINGS) {
-            return settingsOptions;
-        } else if (currentState == MenuState.LEADERBOARD) {
-            return leaderboardOptions;
-        } else if (currentState == MenuState.CREDITS) {
-            return creditsOptions;
-        } else if (currentState == MenuState.LICENSE) {
-            return licensesOptions;
-        } else {
-            return new Menu("FALLBACK MENU");
-        }
+        return switch (currentState) {
+            case MAIN_MENU ->
+                mainMenuOptions;
+            case SETTINGS ->
+                settingsOptions;
+            case LEADERBOARD ->
+                leaderboardOptions;
+            case CREDITS ->
+                creditsOptions;
+            case LICENSE ->
+                licensesOptions;
+            default ->
+                new Menu("FALLBACK MENU");
+        };
     }
 
     private void changeState(MenuState newState) {
