@@ -17,6 +17,7 @@ import io.github.java_projekt_pk.Managers.EnemyManager;
 import io.github.java_projekt_pk.Managers.InputManager;
 import io.github.java_projekt_pk.globals.Box;
 import io.github.java_projekt_pk.globals.SystemDText;
+
 import io.github.java_projekt_pk.monsters.Enemy;
 import io.github.java_projekt_pk.monsters.Slime;
 
@@ -90,6 +91,8 @@ public class InGameScreen implements Screen {
         ScreenUtils.clear(0, 0, 0, 1);
 
         process(delta);
+        var hud = Main.getHud();
+        hud.timeStep(delta);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
@@ -117,6 +120,8 @@ public class InGameScreen implements Screen {
         for (Enemy enemy : EnemyManager.enemies) {
             enemy.draw(batch, time);
         }
+        
+        hud.draw(batch);
 
         batch.end();
     }

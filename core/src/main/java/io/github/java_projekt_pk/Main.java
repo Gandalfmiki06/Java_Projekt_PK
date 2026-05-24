@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 
 import io.github.java_projekt_pk.Managers.FontManager;
 import io.github.java_projekt_pk.Managers.SoundManager;
+import io.github.java_projekt_pk.hud.Hud;
 import io.github.java_projekt_pk.monsters.SlimeSpecies;
 import io.github.java_projekt_pk.screens.GrubMenuScreen;
 
@@ -38,6 +39,8 @@ public class Main extends Game {
     private static Leaderboard leaderboard;
 
     public static SoundManager soundManager = new SoundManager();
+    
+    private static Hud hud;
 
     public static Main getGameInstance() {
         return instance;
@@ -91,6 +94,8 @@ public class Main extends Game {
 
         soundManager.init();
         //soundManager.playMusic(SoundManager.MusicNames.MAIN_THEME);
+        
+        hud = new Hud(atlas);
 
         setScreen(new GrubMenuScreen());
     }
@@ -116,6 +121,10 @@ public class Main extends Game {
 
     public static Leaderboard getLeaderboard() {
         return leaderboard;
+    }
+    
+    public static Hud getHud() {
+        return hud;
     }
 
     @Override

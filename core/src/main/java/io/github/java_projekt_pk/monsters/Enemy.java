@@ -21,6 +21,7 @@ public class Enemy {
 
     protected boolean selected = false;
     protected int health = 1;
+    protected int playerScore = 100;
 
     public String hurtText = "";
     public String inputText = "";
@@ -44,6 +45,7 @@ public class Enemy {
             hurtText = HurtTextGenerator.getRandomText();
             inputText = "";
         } else {
+            Main.getHud().addScore(playerScore);
             die();
         }
     }
