@@ -17,7 +17,6 @@ import io.github.java_projekt_pk.Managers.EnemyManager;
 import io.github.java_projekt_pk.Managers.InputManager;
 import io.github.java_projekt_pk.globals.Box;
 import io.github.java_projekt_pk.globals.SystemDText;
-
 import io.github.java_projekt_pk.monsters.Enemy;
 import io.github.java_projekt_pk.monsters.Slime;
 
@@ -34,7 +33,6 @@ record SystemDMessage(String text, MESSAGETYPE type) {
 public class InGameScreen implements Screen {
 
     private final SpriteBatch batch;
-    private final ShapeRenderer shapeRenderer;
     private final BitmapFont font;
     private final int fontOffset = Math.round(Main.FONT_SIZE * 0.75f);
 
@@ -74,7 +72,6 @@ public class InGameScreen implements Screen {
     public InGameScreen() {
         currentState = GAMESTATE.START;
         batch = new SpriteBatch();
-        shapeRenderer = new ShapeRenderer();
         inputManager = new InputManager();
         Gdx.input.setInputProcessor(inputManager);
 
@@ -94,6 +91,7 @@ public class InGameScreen implements Screen {
         var hud = Main.getHud();
         hud.timeStep(delta);
 
+        var shapeRenderer = Main.getShapeRenderer();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.rect(drawBox.x, drawBox.y, drawBox.width, drawBox.height);
@@ -120,7 +118,23 @@ public class InGameScreen implements Screen {
         for (Enemy enemy : EnemyManager.enemies) {
             enemy.draw(batch, time);
         }
-        
+
+        batch.end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        for (Enemy enemy : EnemyManager.enemies) {
+            enemy.drawTextBox(shapeRenderer);
+        }
+
+        shapeRenderer.end();
+
+        batch.begin();
+
+        for (Enemy enemy : EnemyManager.enemies) {
+            enemy.drawText(batch);
+        }
+
         hud.draw(batch);
 
         batch.end();
@@ -189,29 +203,18 @@ public class InGameScreen implements Screen {
     private void generateWave() {
         // TODO: change this to more complex wave generation, make enemy spawn off screen on the right and slowly move towards "terminal", damaging player when they get there
         Slime slime1 = new Slime(Main.redSlimeSpecies);
-        slime1.setAnimation("Attack3");
-        slime1.setPos(800, 500);
         EnemyManager.enemies.add(slime1);
 
         Slime slime2 = new Slime(Main.greenSlimeSpecies);
-        slime2.setAnimation("Hurt");
-        slime2.setPos(700, 600);
         EnemyManager.enemies.add(slime2);
 
         Slime slime3 = new Slime(Main.greenSlimeSpecies);
-        slime3.setAnimation("Run");
-        slime3.setScale(0.5f);
-        slime3.setPos(600, 100);
         EnemyManager.enemies.add(slime3);
 
         Slime slime4 = new Slime(Main.blueSlimeSpecies);
-        slime4.setAnimation("Jump");
-        slime4.setPos(700, 300);
         EnemyManager.enemies.add(slime4);
 
         Slime slime5 = new Slime(Main.blueSlimeSpecies);
-        slime5.setAnimation("Walk");
-        slime5.setPos(800, 400);
         EnemyManager.enemies.add(slime5);
 
         EnemyManager.selectNextEnemy();
@@ -226,6 +229,13 @@ public class InGameScreen implements Screen {
 
         if (timeSinceLastText >= nextTextDelay && nextTextDelay > 0) {
             nextRandomText();
+        }
+
+        // this iterates backwards, because timeStep could remove enemies
+        for(int i = EnemyManager.enemies.size() - 1; i >= 0; i--)
+        {
+            Enemy enemy = EnemyManager.enemies.get(i);
+            enemy.timeStep(delta);
         }
 
         // hope we can somehow make it not check each frame :C

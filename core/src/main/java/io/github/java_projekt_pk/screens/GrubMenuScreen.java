@@ -34,7 +34,6 @@ public class GrubMenuScreen extends ScreenAdapter {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private SpriteBatch batch;
-    private ShapeRenderer shapeRenderer;
     private BitmapFont font;
 
     private MenuState currentState = MenuState.MAIN_MENU;
@@ -50,7 +49,6 @@ public class GrubMenuScreen extends ScreenAdapter {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        shapeRenderer = new ShapeRenderer();
 
         var params = FontManager.getDefaultParameters();
         params.size = FONT_SIZE;
@@ -163,6 +161,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         float boxWidth = screenWidth - 100;
         float boxHeight = screenHeight - 300;
 
+        var shapeRenderer = Main.getShapeRenderer();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.rect(boxX, boxY, boxWidth, boxHeight);
@@ -242,7 +241,6 @@ public class GrubMenuScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-        shapeRenderer.dispose();
         font.dispose();
     }
 }
