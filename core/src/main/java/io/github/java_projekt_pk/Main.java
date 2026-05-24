@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import io.github.java_projekt_pk.Managers.FontManager;
 import io.github.java_projekt_pk.Managers.SoundManager;
@@ -39,6 +40,8 @@ public class Main extends Game {
     private static Leaderboard leaderboard;
 
     public static SoundManager soundManager = new SoundManager();
+    
+    private static ShapeRenderer shapeRenderer;
     
     private static Hud hud;
 
@@ -95,6 +98,8 @@ public class Main extends Game {
         soundManager.init();
         //soundManager.playMusic(SoundManager.MusicNames.MAIN_THEME);
         
+        shapeRenderer = new ShapeRenderer();
+        
         hud = new Hud(atlas);
 
         setScreen(new GrubMenuScreen());
@@ -126,6 +131,10 @@ public class Main extends Game {
     public static Hud getHud() {
         return hud;
     }
+    
+    public static ShapeRenderer getShapeRenderer() {
+        return shapeRenderer;
+    }
 
     @Override
     public void dispose() {
@@ -133,6 +142,7 @@ public class Main extends Game {
         spriteBatch.dispose();
         atlas.dispose();
         soundManager.dispose();
+        shapeRenderer.dispose();
         instance = null;
     }
 }
