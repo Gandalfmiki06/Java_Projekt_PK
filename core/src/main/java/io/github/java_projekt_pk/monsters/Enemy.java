@@ -22,9 +22,9 @@ public class Enemy {
         IDLE,
         MOVING
     }
-    
+
     private static final Random RANDOM = new Random();
-    
+
     private static final float INITIAL_SCALE = 3.0f;
     private static final float SCALE_MIN = 0.4f;
     private static final float SCALE_MAX = 1.5f;
@@ -37,7 +37,7 @@ public class Enemy {
     private static final float TEXTBOX_PADDING = 5.0f;
     private static final float SCREEN_BORDER = 100.0f;
     private static final float SPAWN_RADIOUS = 200.0f;
-    
+
     private float x = 0.0f;
     private float y = 0.0f;
     private final float scale;
@@ -47,12 +47,12 @@ public class Enemy {
     private float currentX;
     private float currentY;
     private float timerEnd;
-    
+
     protected Animation<TextureRegion> animation;
     protected boolean selected = false;
     protected int health = 1;
     protected int playerScore = 100;
-    
+
     private State state = State.APPROACHING;
     private float timer = 0.0f;
 
@@ -61,17 +61,17 @@ public class Enemy {
 
     public Enemy() {
         hurtText = HurtTextGenerator.getRandomText();
-        
+
         var displayWidth = Gdx.graphics.getWidth();
         x = RANDOM.nextFloat(displayWidth - SPAWN_RADIOUS, displayWidth);
         y = RANDOM.nextFloat(SCREEN_BORDER, Gdx.graphics.getHeight() - SCREEN_BORDER);
         currentX = x;
         currentY = y;
-        
+
         scale = RANDOM.nextFloat(SCALE_MIN, SCALE_MAX);
         currentScale = 0.0f;
     }
-    
+
     public void timeStep(float delta) {
         switch (state) {
             case APPROACHING: {
@@ -81,7 +81,7 @@ public class Enemy {
                     timerEnd = RANDOM.nextFloat(IDLE_TIME_MIN, IDLE_TIME_MAX);
                     state = State.IDLE;
                 }
-                
+
                 currentScale = timer / APPROACHING_TIME;
                 currentX = x;
                 currentY = y;
@@ -97,7 +97,7 @@ public class Enemy {
                     destinationY = RANDOM.nextFloat(Math.max(y - 50.0f, SCREEN_BORDER),
                             Math.min(y + 50.0f, Gdx.graphics.getHeight() - SCREEN_BORDER));
                 }
-                
+
                 currentScale = scale;
                 currentX = x;
                 currentY = y;
@@ -112,17 +112,17 @@ public class Enemy {
                     x = destinationX;
                     y = destinationY;
                 }
-                
+
                 currentScale = scale;
                 currentX = x + (destinationX - x) * timer / timerEnd;
                 currentY = y + (destinationY - y) * timer / timerEnd;
                 break;
             }
         }
-        
+
         if (currentX < PLAYER_DAMAGE_BORDER) {
             Main.getHud().damage();
-            EnemyManager.enemyWon(this);
+            die();
         }
     }
 
@@ -177,7 +177,7 @@ public class Enemy {
     public void setAnimation(String animationName) {
 
     }
-    
+
     public float getPosX() {
         return currentX;
     }

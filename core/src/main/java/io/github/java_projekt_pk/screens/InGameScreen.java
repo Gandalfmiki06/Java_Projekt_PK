@@ -17,7 +17,6 @@ import io.github.java_projekt_pk.Managers.EnemyManager;
 import io.github.java_projekt_pk.Managers.InputManager;
 import io.github.java_projekt_pk.globals.Box;
 import io.github.java_projekt_pk.globals.SystemDText;
-
 import io.github.java_projekt_pk.monsters.Enemy;
 import io.github.java_projekt_pk.monsters.Slime;
 
@@ -121,23 +120,23 @@ public class InGameScreen implements Screen {
         }
 
         batch.end();
-        
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        
+
         for (Enemy enemy : EnemyManager.enemies) {
             enemy.drawTextBox(shapeRenderer);
         }
-        
+
         shapeRenderer.end();
-        
+
         batch.begin();
-        
+
         for (Enemy enemy : EnemyManager.enemies) {
             enemy.drawText(batch);
         }
-        
+
         hud.draw(batch);
-        
+
         batch.end();
     }
 
@@ -231,14 +230,12 @@ public class InGameScreen implements Screen {
         if (timeSinceLastText >= nextTextDelay && nextTextDelay > 0) {
             nextRandomText();
         }
-        
-        for (var enemy : EnemyManager.enemies) {
+
+        // this iterates backwards, because timeStep could remove enemies
+        for(int i = EnemyManager.enemies.size() - 1; i >= 0; i--)
+        {
+            Enemy enemy = EnemyManager.enemies.get(i);
             enemy.timeStep(delta);
-        }
-        
-        while (!EnemyManager.enemiesWon.isEmpty()) {
-            Enemy enemy = EnemyManager.enemiesWon.removeLast();
-            EnemyManager.deleteEnemy(enemy);
         }
 
         // hope we can somehow make it not check each frame :C
