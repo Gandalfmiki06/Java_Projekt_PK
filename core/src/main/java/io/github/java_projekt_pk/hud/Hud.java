@@ -29,7 +29,7 @@ public class Hud {
     private int health;
 
     private BitmapFont scoreFont;
-    int score = 0;
+    private int score = 0;
     private String scoreText;
 
     public Hud(TextureAtlas atlas) {
@@ -43,6 +43,11 @@ public class Hud {
         parameter.size = 40;
         parameter.color = Color.WHITE;
         scoreFont = FontManager.generateFont("google", parameter);
+        updateScore();
+    }
+    
+    public void reset() {
+        score = 0;
         updateScore();
     }
 
