@@ -42,7 +42,7 @@ public class InGameScreen implements Screen {
     private final InputManager inputManager;
 
     private final List<SystemDMessage> activeTexts = new ArrayList<>();
-    private float nextTextDelay = MathUtils.random(0.5f, 3.0f);
+    private float nextTextDelay = 0.5f;
     private float timeSinceLastText = 0.f;
     private float breakTimer = 0.f;
 
@@ -242,6 +242,11 @@ public class InGameScreen implements Screen {
             enemy.timeStep(delta);
         }
 
+        if (Main.getHud().damagedMessage) {
+            addSystemdMessage(MESSAGETYPE.ERROR, 2);
+            Main.getHud().damagedMessage = false;
+        }
+
         if (Main.getHud().health <= 0)
         {
             Main.getGameInstance().setScreen(new GameOverScreen());
@@ -292,22 +297,21 @@ public class InGameScreen implements Screen {
     }
 
     private void nextRandomText() {
-        // TODO: this should be based on current health
-        int rng = MathUtils.random(2);
-        switch (rng) {
-            case 0 -> {
+        int type = 3 *Main.getHud().health / Main.getHud().PLAYER_HEALTH;
+        switch (type) {
+            case 2, 3 -> {
                 addSystemdMessage(MESSAGETYPE.OK);
             }
             case 1 -> {
                 addSystemdMessage(MESSAGETYPE.WARN);
             }
-            case 2 -> {
+            case 0 -> {
                 addSystemdMessage(MESSAGETYPE.ERROR);
             }
         }
 
         timeSinceLastText -= nextTextDelay;
-        nextTextDelay = MathUtils.random(0.5f, 2.0f);
+        nextTextDelay = MathUtils.random(0.5f, 1.0f);
     }
 
     @Override

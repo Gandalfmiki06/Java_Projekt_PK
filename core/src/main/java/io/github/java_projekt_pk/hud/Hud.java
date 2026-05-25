@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import io.github.java_projekt_pk.Managers.FontManager;
 
 public class Hud {
-    private final int PLAYER_HEALTH = 4;
+    public final int PLAYER_HEALTH = 6;
     private final int HEALTH_BAR_OFFSET_X = 20;
     private final int HEALTH_BAR_OFFSET_Y = 50;
     private final int HEART_SIZE = 16 * 2;
@@ -20,15 +20,16 @@ public class Hud {
     private final float DAMAGE_HEART_DURATION = 0.2f;
     private final int SCORE_TEXT_OFFSET = 20;
 
-    private AtlasRegion heartFull;
-    private AtlasRegion heartEmpty;
-    private AtlasRegion heartDamage;
+    private final AtlasRegion heartFull;
+    private final AtlasRegion heartEmpty;
+    private final AtlasRegion heartDamage;
 
+    public  boolean damagedMessage;
     private boolean damaged;
     private float timeSinceDamage;
     public int health;
 
-    private BitmapFont scoreFont;
+    private final BitmapFont scoreFont;
     private int score = 0;
     private String scoreText;
 
@@ -37,6 +38,7 @@ public class Hud {
         heartDamage = atlas.findRegion("heart-damage");
         heartEmpty = atlas.findRegion("heart-empty");
         damaged = false;
+        damagedMessage = false;
         health = PLAYER_HEALTH;
 
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -73,6 +75,7 @@ public class Hud {
     public void damage() {
         health -= 1;
         damaged = true;
+        damagedMessage = true;
         timeSinceDamage = 0.0f;
     }
 

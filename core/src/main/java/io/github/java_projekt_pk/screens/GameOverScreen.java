@@ -38,7 +38,9 @@ public class GameOverScreen extends  ScreenAdapter {
     @Override
     public void render(float delta) {
         frameTime += delta;
-        if (frameTime >= FRAME_LENGTH) Gdx.app.exit();
+        if (frameTime >= FRAME_LENGTH) {
+            Gdx.app.exit();
+        }
 
         ScreenUtils.clear(0.14f, 0.34f, 0.7f, 1f);
 
