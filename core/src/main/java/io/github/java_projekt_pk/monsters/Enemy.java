@@ -1,5 +1,7 @@
 package io.github.java_projekt_pk.monsters;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -56,11 +58,15 @@ public class Enemy {
     private State state = State.APPROACHING;
     private float timer = 0.0f;
 
+    // Tracks words already shown on this enemy to avoid repeats
+    private final List<String> usedWords = new ArrayList<>();
+
     public String hurtText = "";
     public String inputText = "";
 
     public Enemy() {
-        hurtText = HurtTextGenerator.getRandomText();
+        hurtText = HurtTextGenerator.getRandomText(usedWords);
+        usedWords.add(hurtText);
 
         var displayWidth = Gdx.graphics.getWidth();
         x = RANDOM.nextFloat(displayWidth - SPAWN_RADIOUS, displayWidth);
@@ -94,7 +100,7 @@ public class Enemy {
                     state = State.MOVING;
                     destinationX = RANDOM.nextFloat(x - 100.0f, x - 50.0f);
                     destinationY = RANDOM.nextFloat(Math.max(y - 50.0f, SCREEN_BORDER),
-                            Math.min(y + 50.0f, Gdx.graphics.getHeight() - SCREEN_BORDER));
+                        Math.min(y + 50.0f, Gdx.graphics.getHeight() - SCREEN_BORDER));
                 }
 
                 currentScale = scale;
@@ -136,7 +142,8 @@ public class Enemy {
         health--;
         Main.soundManager.playSfx(SoundManager.SfxNames.DAMAGE_ENEMY, 0.1f);
         if (health > 0) {
-            hurtText = HurtTextGenerator.getRandomText();
+            hurtText = HurtTextGenerator.getRandomText(usedWords);
+            usedWords.add(hurtText);
             inputText = "";
         } else {
             Main.getHud().addScore(playerScore);
@@ -168,8 +175,8 @@ public class Enemy {
         GlyphLayout layout = new GlyphLayout(Main.getFont(), renderString);
         shapeRenderer.setColor(Color.BLACK);
         shapeRenderer.rect(currentX - (int) (layout.width) / 2 - TEXTBOX_PADDING,
-                currentY - layout.height - TEXTBOX_PADDING, layout.width + TEXTBOX_PADDING * 2,
-                layout.height + TEXTBOX_PADDING);
+            currentY - layout.height - TEXTBOX_PADDING, layout.width + TEXTBOX_PADDING * 2,
+            layout.height + TEXTBOX_PADDING);
     }
 
     public void setAnimation(String animationName) {
@@ -232,9 +239,8 @@ public class Enemy {
 
     private String escapeMarkup(char c) {
         if (c == '[') {
-            return "[["; // this avoids starting new markup tag
+            return "[[";
         }
-
         return String.valueOf(c);
     }
 
