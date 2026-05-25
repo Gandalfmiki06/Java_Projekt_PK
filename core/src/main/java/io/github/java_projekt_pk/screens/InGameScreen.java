@@ -17,6 +17,7 @@ import io.github.java_projekt_pk.Managers.EnemyManager;
 import io.github.java_projekt_pk.Managers.InputManager;
 import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.globals.Box;
+import io.github.java_projekt_pk.globals.HurtTextGenerator;
 import io.github.java_projekt_pk.globals.SystemDText;
 import io.github.java_projekt_pk.monsters.Enemy;
 import io.github.java_projekt_pk.monsters.Slime;
@@ -78,6 +79,7 @@ public class InGameScreen implements Screen {
         Gdx.input.setInputProcessor(inputManager);
 
         font = Main.getFont();
+        HurtTextGenerator.reset();
     }
 
     @Override
@@ -137,7 +139,7 @@ public class InGameScreen implements Screen {
             enemy.drawText(batch);
         }
 
-        if(showHud) hud.draw(batch);
+        if (showHud) hud.draw(batch);
 
         batch.end();
     }
@@ -205,6 +207,8 @@ public class InGameScreen implements Screen {
     }
 
     private void generateWave() {
+        HurtTextGenerator.nextWave();
+
         // TODO: change this to more complex wave generation, make enemy spawn off screen on the right and slowly move towards "terminal", damaging player when they get there
         Slime slime1 = new Slime(Main.redSlimeSpecies);
         EnemyManager.enemies.add(slime1);
@@ -236,8 +240,7 @@ public class InGameScreen implements Screen {
         }
 
         // this iterates backwards, because timeStep could remove enemies
-        for(int i = EnemyManager.enemies.size() - 1; i >= 0; i--)
-        {
+        for (int i = EnemyManager.enemies.size() - 1; i >= 0; i--) {
             Enemy enemy = EnemyManager.enemies.get(i);
             enemy.timeStep(delta);
         }
@@ -247,8 +250,7 @@ public class InGameScreen implements Screen {
             Main.getHud().damagedMessage = false;
         }
 
-        if (Main.getHud().health <= 0)
-        {
+        if (Main.getHud().health <= 0) {
             Main.getGameInstance().setScreen(new GameOverScreen());
         }
 
@@ -297,7 +299,7 @@ public class InGameScreen implements Screen {
     }
 
     private void nextRandomText() {
-        int type = 3 *Main.getHud().health / Main.getHud().PLAYER_HEALTH;
+        int type = 3 * Main.getHud().health / Main.getHud().PLAYER_HEALTH;
         switch (type) {
             case 2, 3 -> {
                 addSystemdMessage(MESSAGETYPE.OK);
