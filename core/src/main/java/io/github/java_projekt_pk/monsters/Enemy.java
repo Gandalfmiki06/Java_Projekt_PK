@@ -28,7 +28,7 @@ public class Enemy {
     private static final float INITIAL_SCALE = 3.0f;
     private static final float SCALE_MIN = 0.4f;
     private static final float SCALE_MAX = 1.5f;
-    private static final float APPROACHING_TIME = 0.7f;
+    private static final float APPROACHING_TIME = 0.2f;
     private static final float IDLE_TIME_MIN = 0.1f;
     private static final float IDLE_TIME_MAX = 1.0f;
     private static final float MOVE_TIME_MIN = 0.5f;
@@ -74,7 +74,7 @@ public class Enemy {
 
     public void timeStep(float delta) {
         switch (state) {
-            case APPROACHING: {
+            case APPROACHING ->  {
                 timer += delta;
                 if (timer >= APPROACHING_TIME) {
                     timer = 0.0f;
@@ -85,9 +85,8 @@ public class Enemy {
                 currentScale = timer / APPROACHING_TIME;
                 currentX = x;
                 currentY = y;
-                break;
             }
-            case IDLE: {
+            case IDLE ->  {
                 timer += delta;
                 if (timer >= timerEnd) {
                     timer = 0.0f;
@@ -101,9 +100,8 @@ public class Enemy {
                 currentScale = scale;
                 currentX = x;
                 currentY = y;
-                break;
             }
-            case MOVING: {
+            case MOVING ->  {
                 timer += delta;
                 if (timer >= timerEnd) {
                     timer = 0.0f;
@@ -116,12 +114,12 @@ public class Enemy {
                 currentScale = scale;
                 currentX = x + (destinationX - x) * timer / timerEnd;
                 currentY = y + (destinationY - y) * timer / timerEnd;
-                break;
             }
         }
 
         if (currentX < PLAYER_DAMAGE_BORDER) {
             Main.getHud().damage();
+            Main.soundManager.playSfx(SoundManager.SfxNames.HURT, 0);
             die();
         }
     }

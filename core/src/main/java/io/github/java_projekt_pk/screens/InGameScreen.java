@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.EnemyManager;
 import io.github.java_projekt_pk.Managers.InputManager;
+import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.globals.Box;
 import io.github.java_projekt_pk.globals.SystemDText;
 import io.github.java_projekt_pk.monsters.Enemy;
@@ -48,10 +49,11 @@ public class InGameScreen implements Screen {
     private final int MAX_MESSAGE_COUNT = 30;
     private final float BREAK_DELAY = 1.0f;
 
-    private final float START_SEQUENCE_TIME = 1.0f;
+    private final float START_SEQUENCE_TIME = 0.5f;
     private final float START_DELAY = 0.5f;
     private final float MESSAGE_DELAY = 0.5f;
 
+    private boolean showHud = false;
     private boolean ok1Triggered = false;
     private boolean ok2Triggered = false;
     private boolean warnTriggered = false;
@@ -80,7 +82,7 @@ public class InGameScreen implements Screen {
 
     @Override
     public void show() {
-
+        Main.soundManager.playSfx(SoundManager.SfxNames.BOOTING, 0);
     }
 
     @Override
@@ -135,7 +137,7 @@ public class InGameScreen implements Screen {
             enemy.drawText(batch);
         }
 
-        hud.draw(batch);
+        if(showHud) hud.draw(batch);
 
         batch.end();
     }
@@ -183,6 +185,7 @@ public class InGameScreen implements Screen {
         }
 
         if (!errorTriggered && time >= delay + MESSAGE_DELAY * 4) {
+            Main.soundManager.playSfx(SoundManager.SfxNames.GLITCH, 0);
             addSystemdMessage(MESSAGETYPE.ERROR, 10);
             errorTriggered = true;
             currentState = GAMESTATE.BREAK;
@@ -197,6 +200,7 @@ public class InGameScreen implements Screen {
             generateWave();
             breakTimer = 0;
             currentState = GAMESTATE.WAVE;
+            showHud = true;
         }
     }
 
@@ -236,6 +240,11 @@ public class InGameScreen implements Screen {
         {
             Enemy enemy = EnemyManager.enemies.get(i);
             enemy.timeStep(delta);
+        }
+
+        if (Main.getHud().health <= 0)
+        {
+            Main.getGameInstance().setScreen(new GameOverScreen());
         }
 
         // hope we can somehow make it not check each frame :C
@@ -323,6 +332,6 @@ public class InGameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
     }
 }
