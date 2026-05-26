@@ -219,11 +219,12 @@ public class GrubMenuScreen extends ScreenAdapter {
 
             if(item instanceof Interactive interactiveItem) {
                 batch.end();
-                interactiveItem.setSize(new Box( itemX - TEXT_SPACE, itemY - FONT_SIZE - TEXT_SPACE, boxWidth, FONT_SIZE + TEXT_SPACE ));
+                var size = new Box( itemX - TEXT_SPACE, itemY - FONT_SIZE - TEXT_SPACE, boxWidth, FONT_SIZE + TEXT_SPACE );
+                interactiveItem.setSize(size);
                 interactiveItem.render(interactiveItem.getSize(), delta, selected, item.equals(inputControlledBy));
                 batch.begin();
 
-                itemY -= TEXT_SPACE * 3;
+                itemY -= size.height;
                 continue;
             }
 
