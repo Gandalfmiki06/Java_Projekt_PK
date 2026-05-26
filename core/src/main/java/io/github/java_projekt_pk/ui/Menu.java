@@ -1,9 +1,15 @@
 package io.github.java_projekt_pk.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
+import io.github.java_projekt_pk.globals.Box;
+import io.github.java_projekt_pk.screens.GrubMenuScreen;
 
-public class Menu {
+public class Menu implements Disposable {
     protected final Array<MenuItem> items = new Array<>();
     protected int currentIndex = 0;
     private final String title;
@@ -57,13 +63,13 @@ public class Menu {
             iter++;
         }
     }
-    
+
     public void leftPressed() {
-        
+
     }
-    
+
     public void rightPressed() {
-        
+
     }
 
     public void executeCurrentSelection() {
@@ -76,5 +82,14 @@ public class Menu {
 
     public void clearItems() {
         this.items.clear();
+    }
+
+    @Override
+    public void dispose() {
+        for (var item : items) {
+            if (item instanceof Disposable) {
+                ((Disposable) item).dispose();
+            }
+        }
     }
 }
