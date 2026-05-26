@@ -86,6 +86,7 @@ public class Main extends Game {
         soundManager.MasterVolume = settingsConfig.soundMaster.get();
         soundManager.MusicVolume = settingsConfig.soundMusic.get();
         soundManager.SfxVolume = settingsConfig.soundSFX.get();
+        soundManager.updateVolume();
 
         registerFonts();
 
