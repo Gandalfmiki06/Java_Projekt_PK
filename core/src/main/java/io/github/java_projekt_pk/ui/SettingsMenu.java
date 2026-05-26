@@ -46,14 +46,13 @@ public final class SettingsMenu extends Menu {
         }
 
         bar.append("] ");
-        bar.append(Math.round(volume*100));
+        bar.append(Math.round(volume * 100));
         bar.append('%');
 
         return bar.toString();
     }
 
-    private void modifySetting(boolean increase)
-    {
+    private void modifySetting(boolean increase) {
         switch (currentIndex) {
             case 1 -> Main.soundManager.MasterVolume += increase ? 0.05f : -0.05f;
             case 2 -> Main.soundManager.MusicVolume += increase ? 0.05f : -0.05f;
@@ -63,6 +62,11 @@ public final class SettingsMenu extends Menu {
         Main.soundManager.MasterVolume = Math.clamp(Main.soundManager.MasterVolume, 0, 1);
         Main.soundManager.MusicVolume = Math.clamp(Main.soundManager.MusicVolume, 0, 1);
         Main.soundManager.SfxVolume = Math.clamp(Main.soundManager.SfxVolume, 0, 1);
+
+        var cfg = Main.getSettingsConfig();
+        cfg.soundMaster.set(Main.soundManager.MasterVolume);
+        cfg.soundMusic.set(Main.soundManager.MusicVolume);
+        cfg.soundSFX.set(Main.soundManager.SfxVolume);
 
         Main.soundManager.updateVolume();
         items.clear();
