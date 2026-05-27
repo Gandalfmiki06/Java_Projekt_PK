@@ -51,6 +51,8 @@ public class GameOverScreen extends  ScreenAdapter {
         font.draw(batch, "Oczywiście nie zajmiemy się tym od razu.", 50, 390);
         font.draw(batch, "Zamiast tego damy ci SMUTNĄ BUŹKĘ. PO PROSTU SMUTEK!", 50, 360);
         font.draw(batch, "Ze ci sie komputer wywalił.", 50, 330);
+        font.draw(batch, "Ale popatrz na to z innej strony.", 50, 270);
+        font.draw(batch, "Zdobyłeś niezły wynik: " + Main.getHud().getScore(), 50, 240);
         font.draw(batch, "Ukonczono 10%", 50, 150);
 
         batch.end();
