@@ -1,13 +1,10 @@
 package io.github.java_projekt_pk.ui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import io.github.java_projekt_pk.globals.Box;
-import io.github.java_projekt_pk.screens.GrubMenuScreen;
+import io.github.java_projekt_pk.Main;
+import io.github.java_projekt_pk.Managers.SoundManager;
 
 public class Menu implements Disposable {
     protected final Array<MenuItem> items = new Array<>();
@@ -42,6 +39,7 @@ public class Menu implements Disposable {
 
     public void setSelectedIndex(int index) {
         currentIndex = MathUtils.clamp(index, 0, items.size - 1);
+        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
     }
 
     public void moveSelectionUp() {
@@ -52,6 +50,8 @@ public class Menu implements Disposable {
             currentIndex = (currentIndex - 1 + items.size) % items.size;
             iter++;
         }
+
+        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
     }
 
     public void moveSelectionDown() {
@@ -62,6 +62,8 @@ public class Menu implements Disposable {
             currentIndex = (currentIndex + 1) % items.size;
             iter++;
         }
+
+        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
     }
 
     public void leftPressed() {

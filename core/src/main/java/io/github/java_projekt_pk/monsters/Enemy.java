@@ -1,5 +1,7 @@
 package io.github.java_projekt_pk.monsters;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -28,7 +30,7 @@ public class Enemy {
     private static final float INITIAL_SCALE = 3.0f;
     private static final float SCALE_MIN = 0.4f;
     private static final float SCALE_MAX = 1.5f;
-    private static final float APPROACHING_TIME = 0.7f;
+    private static final float APPROACHING_TIME = 0.2f;
     private static final float IDLE_TIME_MIN = 0.1f;
     private static final float IDLE_TIME_MAX = 1.0f;
     private static final float MOVE_TIME_MIN = 0.5f;
@@ -56,11 +58,15 @@ public class Enemy {
     private State state = State.APPROACHING;
     private float timer = 0.0f;
 
+    // Tracks words already shown on this enemy to avoid repeats
+    private final List<String> usedWords = new ArrayList<>();
+
     public String hurtText = "";
     public String inputText = "";
 
     public Enemy() {
-        hurtText = HurtTextGenerator.getRandomText();
+        hurtText = HurtTextGenerator.getRandomText(usedWords);
+        usedWords.add(hurtText);
 
         var displayWidth = Gdx.graphics.getWidth();
         x = RANDOM.nextFloat(displayWidth - SPAWN_RADIOUS, displayWidth);
@@ -74,7 +80,7 @@ public class Enemy {
 
     public void timeStep(float delta) {
         switch (state) {
-            case APPROACHING: {
+            case APPROACHING ->  {
                 timer += delta;
                 if (timer >= APPROACHING_TIME) {
                     timer = 0.0f;
@@ -85,9 +91,8 @@ public class Enemy {
                 currentScale = timer / APPROACHING_TIME;
                 currentX = x;
                 currentY = y;
-                break;
             }
-            case IDLE: {
+            case IDLE ->  {
                 timer += delta;
                 if (timer >= timerEnd) {
                     timer = 0.0f;
@@ -95,15 +100,14 @@ public class Enemy {
                     state = State.MOVING;
                     destinationX = RANDOM.nextFloat(x - 100.0f, x - 50.0f);
                     destinationY = RANDOM.nextFloat(Math.max(y - 50.0f, SCREEN_BORDER),
-                            Math.min(y + 50.0f, Gdx.graphics.getHeight() - SCREEN_BORDER));
+                        Math.min(y + 50.0f, Gdx.graphics.getHeight() - SCREEN_BORDER));
                 }
 
                 currentScale = scale;
                 currentX = x;
                 currentY = y;
-                break;
             }
-            case MOVING: {
+            case MOVING ->  {
                 timer += delta;
                 if (timer >= timerEnd) {
                     timer = 0.0f;
@@ -116,12 +120,12 @@ public class Enemy {
                 currentScale = scale;
                 currentX = x + (destinationX - x) * timer / timerEnd;
                 currentY = y + (destinationY - y) * timer / timerEnd;
-                break;
             }
         }
 
         if (currentX < PLAYER_DAMAGE_BORDER) {
             Main.getHud().damage();
+            Main.soundManager.playSfx(SoundManager.SfxNames.HURT, 0);
             die();
         }
     }
@@ -138,7 +142,8 @@ public class Enemy {
         health--;
         Main.soundManager.playSfx(SoundManager.SfxNames.DAMAGE_ENEMY, 0.1f);
         if (health > 0) {
-            hurtText = HurtTextGenerator.getRandomText();
+            hurtText = HurtTextGenerator.getRandomText(usedWords);
+            usedWords.add(hurtText);
             inputText = "";
         } else {
             Main.getHud().addScore(playerScore);
@@ -170,8 +175,8 @@ public class Enemy {
         GlyphLayout layout = new GlyphLayout(Main.getFont(), renderString);
         shapeRenderer.setColor(Color.BLACK);
         shapeRenderer.rect(currentX - (int) (layout.width) / 2 - TEXTBOX_PADDING,
-                currentY - layout.height - TEXTBOX_PADDING, layout.width + TEXTBOX_PADDING * 2,
-                layout.height + TEXTBOX_PADDING);
+            currentY - layout.height - TEXTBOX_PADDING, layout.width + TEXTBOX_PADDING * 2,
+            layout.height + TEXTBOX_PADDING);
     }
 
     public void setAnimation(String animationName) {
@@ -234,9 +239,8 @@ public class Enemy {
 
     private String escapeMarkup(char c) {
         if (c == '[') {
-            return "[["; // this avoids starting new markup tag
+            return "[[";
         }
-
         return String.valueOf(c);
     }
 

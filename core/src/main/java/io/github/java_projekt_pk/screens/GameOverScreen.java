@@ -1,0 +1,67 @@
+package io.github.java_projekt_pk.screens;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.utils.ScreenUtils;
+
+import io.github.java_projekt_pk.Managers.FontManager;
+
+public class GameOverScreen extends  ScreenAdapter {
+
+    private final SpriteBatch batch;
+    private final BitmapFont fontTitle;
+    private final BitmapFont font;
+
+    private final int TITLE_SIZE = 100;
+    private final int TEXT_SIZE = 30;
+
+    private float frameTime = 0;
+    private final float FRAME_LENGTH = 3;
+
+    public GameOverScreen() {
+        batch = new SpriteBatch();
+
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        parameter.size = TITLE_SIZE;
+        parameter.color = Color.WHITE;
+
+        fontTitle = FontManager.generateFont("google", parameter);
+
+        parameter.size = TEXT_SIZE;
+        font = FontManager.generateFont("google", parameter);
+    }
+
+    @Override
+    public void render(float delta) {
+        frameTime += delta;
+        if (frameTime >= FRAME_LENGTH) {
+            Gdx.app.exit();
+        }
+
+        ScreenUtils.clear(0.14f, 0.34f, 0.7f, 1f);
+
+        batch.begin();
+
+        fontTitle.draw(batch, ":(", 50, Gdx.graphics.getHeight() - 50);
+
+        font.draw(batch, "Witaj!", 50, 450);
+        font.draw(batch, "Zauwazylismy, ze twoj komputer napotkal problem.", 50, 420);
+        font.draw(batch, "Oczywiscie nie zajmiemy sie tym od razu.", 50, 390);
+        font.draw(batch, "Zamiast tego damy ci SMUTNA BUZKE. POPROSTU SMUTEK!", 50, 360);
+        font.draw(batch, "Ze ci sie komputer wywalil.", 50, 330);
+        font.draw(batch, "Ukonczono 10%", 50, 150);
+
+        batch.end();
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        fontTitle.dispose();
+        font.dispose();
+    }
+}

@@ -3,6 +3,7 @@ package io.github.java_projekt_pk.Managers;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.monsters.Enemy;
 
 public class EnemyManager {
@@ -20,6 +21,8 @@ public class EnemyManager {
         }
         enemyPointer = (enemyPointer + 1) % enemies.size();
         enemies.get(enemyPointer).select();
+
+        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0);
     }
 
     public static void deleteEnemy(Enemy instance) {
