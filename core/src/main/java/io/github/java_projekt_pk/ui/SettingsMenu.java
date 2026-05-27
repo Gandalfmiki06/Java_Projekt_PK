@@ -1,6 +1,7 @@
 package io.github.java_projekt_pk.ui;
 
 import io.github.java_projekt_pk.Main;
+import io.github.java_projekt_pk.Managers.SoundManager;
 
 public final class SettingsMenu extends Menu {
 
@@ -53,6 +54,8 @@ public final class SettingsMenu extends Menu {
     }
 
     private void modifySetting(boolean increase) {
+        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
+
         switch (currentIndex) {
             case 1 -> Main.soundManager.MasterVolume += increase ? 0.05f : -0.05f;
             case 2 -> Main.soundManager.MusicVolume += increase ? 0.05f : -0.05f;

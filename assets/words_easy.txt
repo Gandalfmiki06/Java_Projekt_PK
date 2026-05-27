@@ -1,0 +1,10 @@
+if
+for
+int
+var
+new
+try
+get
+set
+run
+add

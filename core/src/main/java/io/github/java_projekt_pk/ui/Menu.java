@@ -3,6 +3,9 @@ package io.github.java_projekt_pk.ui;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
+import io.github.java_projekt_pk.Main;
+import io.github.java_projekt_pk.Managers.SoundManager;
+
 public class Menu {
     protected final Array<MenuItem> items = new Array<>();
     protected int currentIndex = 0;
@@ -36,6 +39,7 @@ public class Menu {
 
     public void setSelectedIndex(int index) {
         currentIndex = MathUtils.clamp(index, 0, items.size - 1);
+        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
     }
 
     public void moveSelectionUp() {
@@ -46,6 +50,8 @@ public class Menu {
             currentIndex = (currentIndex - 1 + items.size) % items.size;
             iter++;
         }
+
+        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
     }
 
     public void moveSelectionDown() {
@@ -56,14 +62,16 @@ public class Menu {
             currentIndex = (currentIndex + 1) % items.size;
             iter++;
         }
+
+        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
     }
-    
+
     public void leftPressed() {
-        
+
     }
-    
+
     public void rightPressed() {
-        
+
     }
 
     public void executeCurrentSelection() {
