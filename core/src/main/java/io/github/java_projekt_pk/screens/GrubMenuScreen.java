@@ -1,7 +1,6 @@
 package io.github.java_projekt_pk.screens;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -117,7 +116,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         changePlayerNameInputMenu = new InputMenu(
             "Change Player Name",
             (name) -> {
-                Gdx.app.log("DEBUG", "Zmieniono nazwe uzytkownika na: " + name);
+                Main.getSettingsConfig().player.set(name);
                 changeState(MenuState.SETTINGS);
             },
             () -> changeState(MenuState.SETTINGS)
@@ -129,7 +128,7 @@ public class GrubMenuScreen extends ScreenAdapter {
                 Menu menu = getCurrentMenu();
 
                 if (inputControlledBy != null) {
-                    if(keycode == Input.Keys.ESCAPE) {
+                    if(keycode == Input.Keys.ESCAPE || keycode == Input.Keys.ENTER) {
                         inputControlledBy = null;
                         return true;
                     }
@@ -175,8 +174,6 @@ public class GrubMenuScreen extends ScreenAdapter {
 
             @Override
             public boolean keyTyped(char character) {
-                Menu menu = getCurrentMenu();
-
                 if (inputControlledBy != null) {
                     return inputControlledBy.handleKeyTyped(character);
                 }

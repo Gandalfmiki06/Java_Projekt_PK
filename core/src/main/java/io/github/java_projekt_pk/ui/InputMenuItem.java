@@ -18,10 +18,10 @@ public class InputMenuItem extends MenuItem implements Interactive {
     private SpriteBatch batch;
     private BitmapFont font;
 
-    public InputMenuItem(String label, boolean selectable) {
-        super(label, () -> {}, selectable);
-        this.size = new Box(0,0,0,0);
-        this.value = "";
+    public InputMenuItem(String value) {
+        super(null, () -> {}, true);
+        this.size = new Box(0, 0, 0, 0);
+        this.value = value;
 
         var params = FontManager.getDefaultParameters();
         params.size = FONT_SIZE;
