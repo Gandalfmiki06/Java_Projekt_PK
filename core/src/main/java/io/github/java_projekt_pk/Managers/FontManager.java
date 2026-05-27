@@ -50,9 +50,10 @@ public class FontManager {
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = 12;
         parameter.color = Color.WHITE;
+        parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + "ąćęłńóśźżĄĆĘŁŃÓŚŻŹ";
         return parameter;
     }
-    
+
     public static void dispose() {
         for (var font : fontMap.values()) {
             font.dispose();
