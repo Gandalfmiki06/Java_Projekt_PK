@@ -8,11 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.FontManager;
 
 public class GameOverScreen extends  ScreenAdapter {
-
-    private final SpriteBatch batch;
     private final BitmapFont fontTitle;
     private final BitmapFont font;
 
@@ -23,8 +22,6 @@ public class GameOverScreen extends  ScreenAdapter {
     private final float FRAME_LENGTH = 3;
 
     public GameOverScreen() {
-        batch = new SpriteBatch();
-
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = TITLE_SIZE;
         parameter.color = Color.WHITE;
@@ -44,6 +41,7 @@ public class GameOverScreen extends  ScreenAdapter {
 
         ScreenUtils.clear(0.14f, 0.34f, 0.7f, 1f);
 
+        var batch = Main.getSpriteBatch();
         batch.begin();
 
         fontTitle.draw(batch, ":(", 50, Gdx.graphics.getHeight() - 50);
@@ -60,7 +58,6 @@ public class GameOverScreen extends  ScreenAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
         fontTitle.dispose();
         font.dispose();
     }

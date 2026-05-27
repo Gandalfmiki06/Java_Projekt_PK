@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -34,7 +33,6 @@ record SystemDMessage(String text, MESSAGETYPE type) {
 
 public class InGameScreen implements Screen {
 
-    private final SpriteBatch batch;
     private final BitmapFont font;
     private final int fontOffset = Math.round(Main.FONT_SIZE * 0.75f);
 
@@ -74,7 +72,6 @@ public class InGameScreen implements Screen {
 
     public InGameScreen() {
         currentState = GAMESTATE.START;
-        batch = new SpriteBatch();
         inputManager = new InputManager();
         Gdx.input.setInputProcessor(inputManager);
 
@@ -101,6 +98,7 @@ public class InGameScreen implements Screen {
         shapeRenderer.rect(drawBox.x, drawBox.y, drawBox.width, drawBox.height);
         shapeRenderer.end();
 
+        var batch = Main.getSpriteBatch();
         batch.begin();
 
         float yPosition = finalBox.y + finalBox.height;
@@ -338,6 +336,6 @@ public class InGameScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        
     }
 }

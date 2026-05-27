@@ -8,7 +8,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -32,8 +31,7 @@ public class GrubMenuScreen extends ScreenAdapter {
     }
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    private SpriteBatch batch;
+    
     private BitmapFont font;
 
     private MenuState currentState = MenuState.MAIN_MENU;
@@ -51,7 +49,6 @@ public class GrubMenuScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        batch = new SpriteBatch();
 
         var params = FontManager.getDefaultParameters();
         params.size = FONT_SIZE;
@@ -209,6 +206,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         float itemX = boxX + TEXT_SPACE;
         float itemY = boxY + boxHeight - TEXT_SPACE;
 
+        var batch = Main.getSpriteBatch();
         batch.begin();
         for (int i = 0; i < items.size; i++){
             MenuItem item = items.get(i);
@@ -280,7 +278,6 @@ public class GrubMenuScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
         font.dispose();
         changePlayerNameInputMenu.dispose();
     }
