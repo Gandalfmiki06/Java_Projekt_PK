@@ -45,8 +45,7 @@ public abstract class Config {
             }
         }
 
-        try {
-            var readable = new BufferedReader(new FileReader(file));
+        try (var readable = new BufferedReader(new FileReader(file))) {
             String line;
             int readedVersion = -1;
             while ((line = readable.readLine()) != null) {
@@ -78,6 +77,9 @@ public abstract class Config {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (NumberFormatException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
         this.save();
