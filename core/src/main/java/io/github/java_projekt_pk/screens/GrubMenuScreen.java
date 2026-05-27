@@ -16,10 +16,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.FontManager;
+import io.github.java_projekt_pk.globals.Box;
 import io.github.java_projekt_pk.globals.Credits;
-import io.github.java_projekt_pk.ui.Menu;
-import io.github.java_projekt_pk.ui.MenuItem;
-import io.github.java_projekt_pk.ui.SettingsMenu;
+import io.github.java_projekt_pk.ui.*;
 
 public class GrubMenuScreen extends ScreenAdapter {
 
@@ -28,7 +27,8 @@ public class GrubMenuScreen extends ScreenAdapter {
         SETTINGS,
         LEADERBOARD,
         CREDITS,
-        LICENSE
+        LICENSE,
+        SETTINGS_CHANGE_NICKNAME
     }
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -37,6 +37,7 @@ public class GrubMenuScreen extends ScreenAdapter {
     private BitmapFont font;
 
     private MenuState currentState = MenuState.MAIN_MENU;
+    private Interactive inputControlledBy;
 
     private Menu mainMenuOptions;
     private Menu settingsOptions;
@@ -44,7 +45,9 @@ public class GrubMenuScreen extends ScreenAdapter {
     private Menu creditsOptions;
     private Menu licensesOptions;
 
-    private final int FONT_SIZE = 20;
+    private InputMenu changePlayerNameInputMenu;
+
+    public static final int FONT_SIZE = 20;
 
     @Override
     public void show() {
@@ -90,6 +93,7 @@ public class GrubMenuScreen extends ScreenAdapter {
                 .addItem(new MenuItem("Quit Game", () -> Gdx.app.exit()));
 
         settingsOptions = new SettingsMenu(backToMenuItem);
+        settingsOptions.addItem(new MenuItem("Change Player Name", () -> changeState(MenuState.SETTINGS_CHANGE_NICKNAME)));
 
         leaderboardOptions = new Menu("Leaderboards");
 
@@ -109,10 +113,27 @@ public class GrubMenuScreen extends ScreenAdapter {
             }, false));
         }
 
+        changePlayerNameInputMenu = new InputMenu(
+            "Change Player Name",
+            (name) -> {
+                Main.getSettingsConfig().player.set(name);
+                changeState(MenuState.SETTINGS);
+            },
+            () -> changeState(MenuState.SETTINGS)
+        );
+
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 Menu menu = getCurrentMenu();
+
+                if (inputControlledBy != null) {
+                    if(keycode == Input.Keys.ESCAPE || keycode == Input.Keys.ENTER) {
+                        inputControlledBy = null;
+                        return true;
+                    }
+                    return inputControlledBy.handleKeyDown(keycode);
+                }
 
                 switch (keycode) {
                     case Input.Keys.UP, Input.Keys.W -> {
@@ -132,6 +153,10 @@ public class GrubMenuScreen extends ScreenAdapter {
                         return true;
                     }
                     case Input.Keys.ENTER, Input.Keys.SPACE -> {
+                        var item = menu.getSelectedItem();
+                        if(item instanceof Interactive) {
+                            inputControlledBy = (Interactive) item;
+                        }
                         menu.executeCurrentSelection();
                         return true;
                     }
@@ -146,11 +171,20 @@ public class GrubMenuScreen extends ScreenAdapter {
                 }
                 return false;
             }
+
+            @Override
+            public boolean keyTyped(char character) {
+                if (inputControlledBy != null) {
+                    return inputControlledBy.handleKeyTyped(character);
+                }
+
+                return false;
+            }
         });
     }
 
     @Override
-    public void render(float delta) {
+    public void render (float delta) {
         ScreenUtils.clear(0.f, 0.f, 0.f, 1f);
 
         float screenWidth = Gdx.graphics.getWidth();
@@ -170,37 +204,41 @@ public class GrubMenuScreen extends ScreenAdapter {
         Menu menu = getCurrentMenu();
         Array<MenuItem> items = menu.getItems();
         MenuItem selectedItem = menu.getSelectedItem();
-        int selectedIndex = menu.getSelectedIndex();
 
         int TEXT_SPACE = 10;
         float itemX = boxX + TEXT_SPACE;
         float itemY = boxY + boxHeight - TEXT_SPACE;
 
-        float itemBoxY = itemY;
+        batch.begin();
+        for (int i = 0; i < items.size; i++){
+            MenuItem item = items.get(i);
+            boolean selected = item.equals(selectedItem);
 
-        for (int i = 0; i < items.size; i++) {
-            if (i == selectedIndex) {
+            if(item instanceof Interactive interactiveItem) {
+                batch.end();
+                var size = new Box( itemX - TEXT_SPACE, itemY - FONT_SIZE - TEXT_SPACE, boxWidth, FONT_SIZE + TEXT_SPACE );
+                interactiveItem.setSize(size);
+                interactiveItem.render(interactiveItem.getSize(), delta, selected, item.equals(inputControlledBy));
+                batch.begin();
+
+                itemY -= size.height;
+                continue;
+            }
+
+            if(selected) {
+                batch.end();
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 shapeRenderer.setColor(Color.WHITE);
-                shapeRenderer.rect(itemX - TEXT_SPACE, itemBoxY - FONT_SIZE - TEXT_SPACE, boxWidth, FONT_SIZE + TEXT_SPACE);
+                shapeRenderer.rect(itemX - TEXT_SPACE, itemY - FONT_SIZE - TEXT_SPACE, boxWidth, FONT_SIZE + TEXT_SPACE);
                 shapeRenderer.end();
+                batch.begin();
 
-                break;
-            }
-
-            itemBoxY -= TEXT_SPACE * 3;
-        }
-
-        batch.begin();
-
-        for (int i = 0; i < items.size; i++) {
-            MenuItem item = items.get(i);
-
-            if (item.equals(selectedItem)) {
                 font.draw(batch, "[BLACK]" + item.getLabel(), itemX, itemY);
-            } else {
+            }
+            else {
                 font.draw(batch, "[" + (item.isSelectable() ? "WHITE" : "GRAY") + "]" + item.getLabel(), itemX, itemY);
             }
+
             itemY -= TEXT_SPACE * 3;
         }
 
@@ -228,6 +266,8 @@ public class GrubMenuScreen extends ScreenAdapter {
                 creditsOptions;
             case LICENSE ->
                 licensesOptions;
+            case SETTINGS_CHANGE_NICKNAME ->
+                changePlayerNameInputMenu;
             default ->
                 new Menu("FALLBACK MENU");
         };
@@ -242,5 +282,6 @@ public class GrubMenuScreen extends ScreenAdapter {
     public void dispose() {
         batch.dispose();
         font.dispose();
+        changePlayerNameInputMenu.dispose();
     }
 }

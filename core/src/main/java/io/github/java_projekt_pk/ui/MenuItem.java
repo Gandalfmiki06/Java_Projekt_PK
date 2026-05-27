@@ -4,9 +4,9 @@ import java.util.Comparator;
 import java.util.Objects;
 
 public class MenuItem implements Comparable<MenuItem> {
-    private final String label;
-    private final MenuAction action;
-    private final boolean selectable;
+    protected final String label;
+    protected final MenuAction action;
+    protected final boolean selectable;
 
     public MenuItem(String label, MenuAction action, boolean selectable) {
         this.label = label;
