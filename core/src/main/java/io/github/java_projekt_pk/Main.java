@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import io.github.java_projekt_pk.Managers.FontManager;
 import io.github.java_projekt_pk.Managers.SoundManager;
+import io.github.java_projekt_pk.config.SettingsConfig;
 import io.github.java_projekt_pk.hud.Hud;
 import io.github.java_projekt_pk.monsters.SlimeSpecies;
 import io.github.java_projekt_pk.screens.GrubMenuScreen;
@@ -39,10 +40,12 @@ public class Main extends Game {
 
     private static Leaderboard leaderboard;
 
+    private static SettingsConfig settingsConfig;
+
     public static SoundManager soundManager = new SoundManager();
-    
+
     private static ShapeRenderer shapeRenderer;
-    
+
     private static Hud hud;
 
     public static Main getGameInstance() {
@@ -79,6 +82,12 @@ public class Main extends Game {
         leaderboard = new Leaderboard(getProjectDir().resolve("leaderboard"), 10);
         leaderboard.setAutosave(true);
 
+        settingsConfig = new SettingsConfig(getProjectDir().resolve("config/settings"));
+        soundManager.MasterVolume = settingsConfig.soundMaster.get();
+        soundManager.MusicVolume = settingsConfig.soundMusic.get();
+        soundManager.SfxVolume = settingsConfig.soundSFX.get();
+        soundManager.updateVolume();
+
         registerFonts();
 
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -97,9 +106,9 @@ public class Main extends Game {
 
         soundManager.init();
         //soundManager.playMusic(SoundManager.MusicNames.MAIN_THEME);
-        
+
         shapeRenderer = new ShapeRenderer();
-        
+
         hud = new Hud(atlas);
 
         setScreen(new GrubMenuScreen());
@@ -127,11 +136,15 @@ public class Main extends Game {
     public static Leaderboard getLeaderboard() {
         return leaderboard;
     }
-    
+
+    public static SettingsConfig getSettingsConfig() {
+        return settingsConfig;
+    }
+
     public static Hud getHud() {
         return hud;
     }
-    
+
     public static ShapeRenderer getShapeRenderer() {
         return shapeRenderer;
     }
