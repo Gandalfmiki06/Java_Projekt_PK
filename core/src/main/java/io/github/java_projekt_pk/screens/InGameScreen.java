@@ -15,7 +15,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.java_projekt_pk.Main;
 import io.github.java_projekt_pk.Managers.EnemyManager;
 import io.github.java_projekt_pk.Managers.InputManager;
+import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.globals.Box;
+import io.github.java_projekt_pk.globals.HurtTextGenerator;
 import io.github.java_projekt_pk.globals.SystemDText;
 import io.github.java_projekt_pk.monsters.Enemy;
 import io.github.java_projekt_pk.monsters.Slime;
@@ -41,17 +43,18 @@ public class InGameScreen implements Screen {
     private final InputManager inputManager;
 
     private final List<SystemDMessage> activeTexts = new ArrayList<>();
-    private float nextTextDelay = MathUtils.random(0.5f, 3.0f);
+    private float nextTextDelay = 0.5f;
     private float timeSinceLastText = 0.f;
     private float breakTimer = 0.f;
 
     private final int MAX_MESSAGE_COUNT = 30;
     private final float BREAK_DELAY = 1.0f;
 
-    private final float START_SEQUENCE_TIME = 1.0f;
+    private final float START_SEQUENCE_TIME = 0.5f;
     private final float START_DELAY = 0.5f;
     private final float MESSAGE_DELAY = 0.5f;
 
+    private boolean showHud = false;
     private boolean ok1Triggered = false;
     private boolean ok2Triggered = false;
     private boolean warnTriggered = false;
@@ -76,11 +79,12 @@ public class InGameScreen implements Screen {
         Gdx.input.setInputProcessor(inputManager);
 
         font = Main.getFont();
+        HurtTextGenerator.reset();
     }
 
     @Override
     public void show() {
-
+        Main.soundManager.playSfx(SoundManager.SfxNames.BOOTING, 0);
     }
 
     @Override
@@ -135,7 +139,7 @@ public class InGameScreen implements Screen {
             enemy.drawText(batch);
         }
 
-        hud.draw(batch);
+        if (showHud) hud.draw(batch);
 
         batch.end();
     }
@@ -183,6 +187,7 @@ public class InGameScreen implements Screen {
         }
 
         if (!errorTriggered && time >= delay + MESSAGE_DELAY * 4) {
+            Main.soundManager.playSfx(SoundManager.SfxNames.GLITCH, 0);
             addSystemdMessage(MESSAGETYPE.ERROR, 10);
             errorTriggered = true;
             currentState = GAMESTATE.BREAK;
@@ -197,10 +202,13 @@ public class InGameScreen implements Screen {
             generateWave();
             breakTimer = 0;
             currentState = GAMESTATE.WAVE;
+            showHud = true;
         }
     }
 
     private void generateWave() {
+        HurtTextGenerator.nextWave();
+
         // TODO: change this to more complex wave generation, make enemy spawn off screen on the right and slowly move towards "terminal", damaging player when they get there
         Slime slime1 = new Slime(Main.redSlimeSpecies);
         EnemyManager.enemies.add(slime1);
@@ -232,10 +240,18 @@ public class InGameScreen implements Screen {
         }
 
         // this iterates backwards, because timeStep could remove enemies
-        for(int i = EnemyManager.enemies.size() - 1; i >= 0; i--)
-        {
+        for (int i = EnemyManager.enemies.size() - 1; i >= 0; i--) {
             Enemy enemy = EnemyManager.enemies.get(i);
             enemy.timeStep(delta);
+        }
+
+        if (Main.getHud().damagedMessage) {
+            addSystemdMessage(MESSAGETYPE.ERROR, 2);
+            Main.getHud().damagedMessage = false;
+        }
+
+        if (Main.getHud().health <= 0) {
+            Main.getGameInstance().setScreen(new GameOverScreen());
         }
 
         // hope we can somehow make it not check each frame :C
@@ -283,22 +299,21 @@ public class InGameScreen implements Screen {
     }
 
     private void nextRandomText() {
-        // TODO: this should be based on current health
-        int rng = MathUtils.random(2);
-        switch (rng) {
-            case 0 -> {
+        int type = 3 * Main.getHud().health / Main.getHud().PLAYER_HEALTH;
+        switch (type) {
+            case 2, 3 -> {
                 addSystemdMessage(MESSAGETYPE.OK);
             }
             case 1 -> {
                 addSystemdMessage(MESSAGETYPE.WARN);
             }
-            case 2 -> {
+            case 0 -> {
                 addSystemdMessage(MESSAGETYPE.ERROR);
             }
         }
 
         timeSinceLastText -= nextTextDelay;
-        nextTextDelay = MathUtils.random(0.5f, 2.0f);
+        nextTextDelay = MathUtils.random(0.5f, 1.0f);
     }
 
     @Override
@@ -323,6 +338,6 @@ public class InGameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
     }
 }

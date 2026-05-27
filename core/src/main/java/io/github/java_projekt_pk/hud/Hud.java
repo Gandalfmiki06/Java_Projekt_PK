@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import io.github.java_projekt_pk.Managers.FontManager;
 
 public class Hud {
-    private final int PLAYER_HEALTH = 9;
+    public final int PLAYER_HEALTH = 6;
     private final int HEALTH_BAR_OFFSET_X = 20;
     private final int HEALTH_BAR_OFFSET_Y = 50;
     private final int HEART_SIZE = 16 * 2;
@@ -20,15 +20,16 @@ public class Hud {
     private final float DAMAGE_HEART_DURATION = 0.2f;
     private final int SCORE_TEXT_OFFSET = 20;
 
-    private AtlasRegion heartFull;
-    private AtlasRegion heartEmpty;
-    private AtlasRegion heartDamage;
+    private final AtlasRegion heartFull;
+    private final AtlasRegion heartEmpty;
+    private final AtlasRegion heartDamage;
 
+    public  boolean damagedMessage;
     private boolean damaged;
     private float timeSinceDamage;
-    private int health;
+    public int health;
 
-    private BitmapFont scoreFont;
+    private final BitmapFont scoreFont;
     private int score = 0;
     private String scoreText;
 
@@ -37,15 +38,16 @@ public class Hud {
         heartDamage = atlas.findRegion("heart-damage");
         heartEmpty = atlas.findRegion("heart-empty");
         damaged = false;
+        damagedMessage = false;
         health = PLAYER_HEALTH;
 
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = 40;
         parameter.color = Color.WHITE;
-        scoreFont = FontManager.generateFont("google", parameter);
+        scoreFont = FontManager.generateFont("terminus-bold", parameter);
         updateScore();
     }
-    
+
     public void reset() {
         score = 0;
         updateScore();
@@ -64,7 +66,7 @@ public class Hud {
         drawHealthBar(spriteBatch);
         drawScoreText(spriteBatch);
     }
-    
+
     public void addScore(int score) {
         this.score += score;
         updateScore();
@@ -73,9 +75,10 @@ public class Hud {
     public void damage() {
         health -= 1;
         damaged = true;
+        damagedMessage = true;
         timeSinceDamage = 0.0f;
     }
-    
+
     private void drawHealthBar(SpriteBatch spriteBatch) {
         for (int i = 0; i < PLAYER_HEALTH; i++) {
             AtlasRegion heartType;
@@ -92,11 +95,11 @@ public class Hud {
                     Gdx.graphics.getHeight() - HEALTH_BAR_OFFSET_Y, HEART_SIZE, HEART_SIZE);
         }
     }
-    
+
     private void updateScore() {
         scoreText = String.format("%04d", this.score);
     }
-    
+
     private void drawScoreText(SpriteBatch spriteBatch) {
         GlyphLayout layout = new GlyphLayout(scoreFont, scoreText);
         scoreFont.draw(spriteBatch, scoreText, Gdx.graphics.getWidth() / 2 - (int) layout.width / 2,
