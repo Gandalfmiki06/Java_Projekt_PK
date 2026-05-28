@@ -125,7 +125,7 @@ public class Enemy {
 
         if (currentX < PLAYER_DAMAGE_BORDER) {
             Main.getHud().damage();
-            Main.soundManager.playSfx(SoundManager.SfxNames.HURT, 0);
+            Main.getSoundManager().playSfx(SoundManager.SfxNames.HURT, 0);
             die();
         }
     }
@@ -140,7 +140,7 @@ public class Enemy {
 
     public void hurt() {
         health--;
-        Main.soundManager.playSfx(SoundManager.SfxNames.DAMAGE_ENEMY, 0.1f);
+        Main.getSoundManager().playSfx(SoundManager.SfxNames.DAMAGE_ENEMY, 0.1f);
         if (health > 0) {
             hurtText = HurtTextGenerator.getRandomText(usedWords);
             usedWords.add(hurtText);
@@ -152,7 +152,7 @@ public class Enemy {
     }
 
     private void die() {
-        Main.soundManager.playSfx(SoundManager.SfxNames.DEATH_ENEMY, 0.1f);
+        Main.getSoundManager().playSfx(SoundManager.SfxNames.DEATH_ENEMY, 0.1f);
         EnemyManager.deleteEnemy(this);
     }
 

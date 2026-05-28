@@ -42,7 +42,7 @@ public class Main extends Game {
 
     private static SettingsConfig settingsConfig;
 
-    public static SoundManager soundManager = new SoundManager();
+    private static SoundManager soundManager = new SoundManager();
 
     private static ShapeRenderer shapeRenderer;
 
@@ -139,6 +139,10 @@ public class Main extends Game {
 
     public static SettingsConfig getSettingsConfig() {
         return settingsConfig;
+    }
+    
+    public static SoundManager getSoundManager() {
+        return soundManager;
     }
 
     public static Hud getHud() {

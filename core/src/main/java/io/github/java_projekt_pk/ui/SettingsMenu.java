@@ -25,12 +25,13 @@ public final class SettingsMenu extends Menu {
 
     public void generateItems() {
         addItem(backToMenuItem);
+        var soundManager = Main.getSoundManager();
         addItem(new MenuItem(String.format("%-15s%s", "Master volume",
-                getVolumeBar(Main.soundManager.MasterVolume)), () -> { }, true));
+                getVolumeBar(soundManager.MasterVolume)), () -> { }, true));
         addItem(new MenuItem(String.format("%-15s%s", "Music Volume",
-                getVolumeBar(Main.soundManager.MusicVolume)), () -> { }, true));
+                getVolumeBar(soundManager.MusicVolume)), () -> { }, true));
         addItem(new MenuItem(String.format("%-15s%s", "Sfx Volume",
-                getVolumeBar(Main.soundManager.SfxVolume)), () -> { }, true));
+                getVolumeBar(soundManager.SfxVolume)), () -> { }, true));
     }
 
     private String getVolumeBar(float volume)
@@ -54,24 +55,25 @@ public final class SettingsMenu extends Menu {
     }
 
     private void modifySetting(boolean increase) {
-        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
+        var soundManager = Main.getSoundManager();
+        soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
 
         switch (currentIndex) {
-            case 1 -> Main.soundManager.MasterVolume += increase ? 0.05f : -0.05f;
-            case 2 -> Main.soundManager.MusicVolume += increase ? 0.05f : -0.05f;
-            case 3 -> Main.soundManager.SfxVolume += increase ? 0.05f : -0.05f;
+            case 1 -> soundManager.MasterVolume += increase ? 0.05f : -0.05f;
+            case 2 -> soundManager.MusicVolume += increase ? 0.05f : -0.05f;
+            case 3 -> soundManager.SfxVolume += increase ? 0.05f : -0.05f;
         }
 
-        Main.soundManager.MasterVolume = Math.clamp(Main.soundManager.MasterVolume, 0, 1);
-        Main.soundManager.MusicVolume = Math.clamp(Main.soundManager.MusicVolume, 0, 1);
-        Main.soundManager.SfxVolume = Math.clamp(Main.soundManager.SfxVolume, 0, 1);
+        soundManager.MasterVolume = Math.clamp(soundManager.MasterVolume, 0, 1);
+        soundManager.MusicVolume = Math.clamp(soundManager.MusicVolume, 0, 1);
+        soundManager.SfxVolume = Math.clamp(soundManager.SfxVolume, 0, 1);
 
         var cfg = Main.getSettingsConfig();
-        cfg.soundMaster.set(Main.soundManager.MasterVolume);
-        cfg.soundMusic.set(Main.soundManager.MusicVolume);
-        cfg.soundSFX.set(Main.soundManager.SfxVolume);
+        cfg.soundMaster.set(soundManager.MasterVolume);
+        cfg.soundMusic.set(soundManager.MusicVolume);
+        cfg.soundSFX.set(soundManager.SfxVolume);
 
-        Main.soundManager.updateVolume();
+        soundManager.updateVolume();
         items.clear();
         generateItems();
     }

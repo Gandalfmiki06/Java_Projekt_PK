@@ -81,7 +81,7 @@ public class InGameScreen implements Screen {
 
     @Override
     public void show() {
-        Main.soundManager.playSfx(SoundManager.SfxNames.BOOTING, 0);
+        Main.getSoundManager().playSfx(SoundManager.SfxNames.BOOTING, 0);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class InGameScreen implements Screen {
         }
 
         if (!errorTriggered && time >= delay + MESSAGE_DELAY * 4) {
-            Main.soundManager.playSfx(SoundManager.SfxNames.GLITCH, 0);
+            Main.getSoundManager().playSfx(SoundManager.SfxNames.GLITCH, 0);
             addSystemdMessage(MESSAGETYPE.ERROR, 10);
             errorTriggered = true;
             currentState = GAMESTATE.BREAK;
