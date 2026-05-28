@@ -105,4 +105,8 @@ public class Hud {
         scoreFont.draw(spriteBatch, scoreText, Gdx.graphics.getWidth() / 2 - (int) layout.width / 2,
                 Gdx.graphics.getHeight() - SCORE_TEXT_OFFSET);
     }
+
+    public int getScore() {
+        return score;
+    }
 }

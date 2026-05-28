@@ -246,14 +246,16 @@ public class InGameScreen implements Screen {
             enemy.timeStep(delta);
         }
 
-        var hud = Main.getGameInstance().getHud();
+        var game = Main.getGameInstance();
+        var hud = game.getHud();
         if (hud.damagedMessage) {
             addSystemdMessage(MESSAGETYPE.ERROR, 2);
             hud.damagedMessage = false;
         }
 
         if (hud.health <= 0) {
-            Main.getGameInstance().setScreen(new GameOverScreen());
+            game.getLeaderboard().addEntry(game.getSettingsConfig().player.get(), hud.getScore());
+            game.setScreen(new GameOverScreen());
         }
 
         // hope we can somehow make it not check each frame :C
@@ -340,6 +342,6 @@ public class InGameScreen implements Screen {
 
     @Override
     public void dispose() {
-        
+
     }
 }
