@@ -40,7 +40,7 @@ public class GameOverScreen extends  ScreenAdapter {
 
         ScreenUtils.clear(0.14f, 0.34f, 0.7f, 1f);
 
-        var batch = Main.getSpriteBatch();
+        var batch = Main.getGameInstance().getSpriteBatch();
         batch.begin();
 
         fontTitle.draw(batch, ":(", 50, Gdx.graphics.getHeight() - 50);

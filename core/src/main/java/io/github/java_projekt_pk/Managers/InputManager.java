@@ -54,7 +54,7 @@ public class InputManager extends InputAdapter {
     private void playClickSound(char c) {
         if (c != lastChar) {
             lastChar = c;
-            Main.getSoundManager().playSfx(SoundManager.SfxNames.CLICK, 0.1f);
+            Main.getGameInstance().getSoundManager().playSfx(SoundManager.SfxNames.CLICK, 0.1f);
         }
     }
 

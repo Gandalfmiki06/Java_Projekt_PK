@@ -124,8 +124,9 @@ public class Enemy {
         }
 
         if (currentX < PLAYER_DAMAGE_BORDER) {
-            Main.getHud().damage();
-            Main.getSoundManager().playSfx(SoundManager.SfxNames.HURT, 0);
+            var game = Main.getGameInstance();
+            game.getHud().damage();
+            game.getSoundManager().playSfx(SoundManager.SfxNames.HURT, 0);
             die();
         }
     }
@@ -140,19 +141,19 @@ public class Enemy {
 
     public void hurt() {
         health--;
-        Main.getSoundManager().playSfx(SoundManager.SfxNames.DAMAGE_ENEMY, 0.1f);
+        Main.getGameInstance().getSoundManager().playSfx(SoundManager.SfxNames.DAMAGE_ENEMY, 0.1f);
         if (health > 0) {
             hurtText = HurtTextGenerator.getRandomText(usedWords);
             usedWords.add(hurtText);
             inputText = "";
         } else {
-            Main.getHud().addScore(playerScore);
+            Main.getGameInstance().getHud().addScore(playerScore);
             die();
         }
     }
 
     private void die() {
-        Main.getSoundManager().playSfx(SoundManager.SfxNames.DEATH_ENEMY, 0.1f);
+        Main.getGameInstance().getSoundManager().playSfx(SoundManager.SfxNames.DEATH_ENEMY, 0.1f);
         EnemyManager.deleteEnemy(this);
     }
 
@@ -166,13 +167,14 @@ public class Enemy {
 
     public void drawText(SpriteBatch batch) {
         String renderString = getRenderString();
-        GlyphLayout layout = new GlyphLayout(Main.getFont(), renderString);
-        Main.getFont().draw(batch, renderString, currentX - (int) (layout.width) / 2, currentY);
+        var game = Main.getGameInstance();
+        GlyphLayout layout = new GlyphLayout(game.getFont(), renderString);
+        game.getFont().draw(batch, renderString, currentX - (int) (layout.width) / 2, currentY);
     }
 
     public void drawTextBox(ShapeRenderer shapeRenderer) {
         String renderString = getRenderString();
-        GlyphLayout layout = new GlyphLayout(Main.getFont(), renderString);
+        GlyphLayout layout = new GlyphLayout(Main.getGameInstance().getFont(), renderString);
         shapeRenderer.setColor(Color.BLACK);
         shapeRenderer.rect(currentX - (int) (layout.width) / 2 - TEXTBOX_PADDING,
             currentY - layout.height - TEXTBOX_PADDING, layout.width + TEXTBOX_PADDING * 2,

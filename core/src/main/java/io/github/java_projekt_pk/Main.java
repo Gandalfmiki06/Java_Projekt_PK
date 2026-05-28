@@ -29,24 +29,24 @@ public class Main extends Game {
 
     private static Main instance;
 
-    private static TextureAtlas atlas;
-    private static SpriteBatch spriteBatch;
+    private TextureAtlas atlas;
+    private SpriteBatch spriteBatch;
 
-    public static SlimeSpecies redSlimeSpecies;
-    public static SlimeSpecies greenSlimeSpecies;
-    public static SlimeSpecies blueSlimeSpecies;
+    public SlimeSpecies redSlimeSpecies;
+    public SlimeSpecies greenSlimeSpecies;
+    public SlimeSpecies blueSlimeSpecies;
 
-    private static BitmapFont font;
+    private BitmapFont font;
 
-    private static Leaderboard leaderboard;
+    private Leaderboard leaderboard;
 
-    private static SettingsConfig settingsConfig;
+    private SettingsConfig settingsConfig;
 
-    private static SoundManager soundManager = new SoundManager();
+    private SoundManager soundManager = new SoundManager();
 
-    private static ShapeRenderer shapeRenderer;
+    private ShapeRenderer shapeRenderer;
 
-    private static Hud hud;
+    private Hud hud;
 
     public static Main getGameInstance() {
         return instance;
@@ -121,35 +121,35 @@ public class Main extends Game {
         FontManager.registerFont("terminus-bold", Gdx.files.internal("TerminusTTF-Bold-4.49.3.ttf"));
     }
 
-    public static TextureAtlas getTextureAtlas() {
+    public TextureAtlas getTextureAtlas() {
         return atlas;
     }
 
-    public static SpriteBatch getSpriteBatch() {
+    public SpriteBatch getSpriteBatch() {
         return spriteBatch;
     }
 
-    public static BitmapFont getFont() {
+    public BitmapFont getFont() {
         return font;
     }
 
-    public static Leaderboard getLeaderboard() {
+    public Leaderboard getLeaderboard() {
         return leaderboard;
     }
 
-    public static SettingsConfig getSettingsConfig() {
+    public SettingsConfig getSettingsConfig() {
         return settingsConfig;
     }
     
-    public static SoundManager getSoundManager() {
+    public SoundManager getSoundManager() {
         return soundManager;
     }
 
-    public static Hud getHud() {
+    public Hud getHud() {
         return hud;
     }
 
-    public static ShapeRenderer getShapeRenderer() {
+    public ShapeRenderer getShapeRenderer() {
         return shapeRenderer;
     }
 

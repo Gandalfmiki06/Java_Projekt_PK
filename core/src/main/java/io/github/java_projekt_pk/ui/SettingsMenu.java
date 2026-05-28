@@ -25,7 +25,7 @@ public final class SettingsMenu extends Menu {
 
     public void generateItems() {
         addItem(backToMenuItem);
-        var soundManager = Main.getSoundManager();
+        var soundManager = Main.getGameInstance().getSoundManager();
         addItem(new MenuItem(String.format("%-15s%s", "Master volume",
                 getVolumeBar(soundManager.MasterVolume)), () -> { }, true));
         addItem(new MenuItem(String.format("%-15s%s", "Music Volume",
@@ -55,7 +55,7 @@ public final class SettingsMenu extends Menu {
     }
 
     private void modifySetting(boolean increase) {
-        var soundManager = Main.getSoundManager();
+        var soundManager = Main.getGameInstance().getSoundManager();
         soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
 
         switch (currentIndex) {
@@ -68,7 +68,7 @@ public final class SettingsMenu extends Menu {
         soundManager.MusicVolume = Math.clamp(soundManager.MusicVolume, 0, 1);
         soundManager.SfxVolume = Math.clamp(soundManager.SfxVolume, 0, 1);
 
-        var cfg = Main.getSettingsConfig();
+        var cfg = Main.getGameInstance().getSettingsConfig();
         cfg.soundMaster.set(soundManager.MasterVolume);
         cfg.soundMusic.set(soundManager.MusicVolume);
         cfg.soundSFX.set(soundManager.SfxVolume);

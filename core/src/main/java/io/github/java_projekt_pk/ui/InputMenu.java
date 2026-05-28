@@ -8,7 +8,7 @@ public class InputMenu extends Menu {
     public InputMenu(String title, InputMenuItem.InputMenuAction applyAction, MenuItem.MenuAction backAction) {
         super(title);
 
-        inputItem = new InputMenuItem(Main.getSettingsConfig().player.get());
+        inputItem = new InputMenuItem(Main.getGameInstance().getSettingsConfig().player.get());
 
         addItem(inputItem);
         addItem(new MenuItem("Confirm", () -> applyAction.execute(inputItem.getValue())));

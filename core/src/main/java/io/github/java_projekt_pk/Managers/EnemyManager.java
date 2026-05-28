@@ -22,7 +22,7 @@ public class EnemyManager {
         enemyPointer = (enemyPointer + 1) % enemies.size();
         enemies.get(enemyPointer).select();
 
-        Main.getSoundManager().playSfx(SoundManager.SfxNames.SELECT, 0);
+        Main.getGameInstance().getSoundManager().playSfx(SoundManager.SfxNames.SELECT, 0);
     }
 
     public static void deleteEnemy(Enemy instance) {
