@@ -249,6 +249,7 @@ public class InGameScreen implements Screen {
         }
 
         if (Main.getHud().health <= 0) {
+            Main.getLeaderboard().addEntry(Main.getSettingsConfig().player.get(), Main.getHud().getScore());
             Main.getGameInstance().setScreen(new GameOverScreen());
         }
 
@@ -336,6 +337,6 @@ public class InGameScreen implements Screen {
 
     @Override
     public void dispose() {
-        
+
     }
 }
