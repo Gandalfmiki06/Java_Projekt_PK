@@ -118,7 +118,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         creditsOptions = new Menu("Credits")
                 .addItem(backToMenuItem);
 
-        for (var txt : Credits.authors) {
+        for (var txt : Credits.AUTHORS) {
             creditsOptions.addItem(new MenuItem(txt, () -> {
             }, false));
         }
@@ -126,7 +126,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         licensesOptions = new Menu("Licenses")
                 .addItem(backToMenuItem);
 
-        for (var txt : Credits.licenses) {
+        for (var txt : Credits.LICENSES) {
             licensesOptions.addItem(new MenuItem(txt, () -> {
             }, false));
         }

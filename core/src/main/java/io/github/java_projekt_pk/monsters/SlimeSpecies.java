@@ -11,13 +11,13 @@ import io.github.java_projekt_pk.SpriteAnimation;
 
 public class SlimeSpecies {
 
-    public static final String[] animationNames = {"Idle", "Walk", "Run", "Jump", "Hurt", "Attack1", "Attack2",
+    public static final String[] ANIMATION_NAMES = {"Idle", "Walk", "Run", "Jump", "Hurt", "Attack1", "Attack2",
         "Attack3", "Run+Attack", "Dead"};
     Map<String, Animation<TextureRegion>> animations;
 
     public SlimeSpecies(TextureAtlas atlas, String species) {
         animations = new HashMap<>();
-        for (var animation : animationNames) {
+        for (var animation : ANIMATION_NAMES) {
             animations.put(animation, SpriteAnimation.fromAtlas(atlas, species + "/" + animation));
         }
     }
