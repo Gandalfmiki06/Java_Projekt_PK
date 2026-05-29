@@ -25,10 +25,21 @@ public class GrubMenuScreen extends ScreenAdapter {
         MAIN_MENU,
         SETTINGS,
         LEADERBOARD,
+        HELP,
         CREDITS,
         LICENSE,
         SETTINGS_CHANGE_NICKNAME
     }
+    
+    private static final String[] HELP_TEXT = {
+        "Waves of bugs come to destroy your Linux kernel. Your job is to",
+        "defend the boot screen from them. Each bug has a label with text",
+        "you have to type on the keyboard to successfully damage the bug.",
+        "The currently selected target has white text on its label. You",
+        "can change the selection using [CYAN]TAB[WHITE] key. You can correct your",
+        "typing mistakes using backspace. Once a bug travels to the end",
+        "of your kernel screen (left edge), you get one damage point.",
+    };
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     
@@ -40,6 +51,7 @@ public class GrubMenuScreen extends ScreenAdapter {
     private Menu mainMenuOptions;
     private Menu settingsOptions;
     private Menu leaderboardOptions;
+    private Menu helpOptions;
     private Menu creditsOptions;
     private Menu licensesOptions;
 
@@ -55,7 +67,7 @@ public class GrubMenuScreen extends ScreenAdapter {
 
         font = FontManager.generateFont("terminus", params);
 
-        MenuItem backToMenuItem = new MenuItem("Back do menu", () -> changeState(MenuState.MAIN_MENU));
+        MenuItem backToMenuItem = new MenuItem("Back to menu", () -> changeState(MenuState.MAIN_MENU));
 
         mainMenuOptions = new Menu("Main Menu")
                 .addItem(new MenuItem("Start Game", () -> Main.getGameInstance().setScreen(new InGameScreen())))
@@ -85,6 +97,7 @@ public class GrubMenuScreen extends ScreenAdapter {
 
                     changeState(MenuState.LEADERBOARD);
                 }))
+                .addItem(new MenuItem("Help", () -> changeState(MenuState.HELP)))
                 .addItem(new MenuItem("Credits", () -> changeState(MenuState.CREDITS)))
                 .addItem(new MenuItem("Licenses", () -> changeState(MenuState.LICENSE)))
                 .addItem(new MenuItem("Quit Game", () -> Gdx.app.exit()));
@@ -93,6 +106,14 @@ public class GrubMenuScreen extends ScreenAdapter {
         settingsOptions.addItem(new MenuItem("Change Player Name", () -> changeState(MenuState.SETTINGS_CHANGE_NICKNAME)));
 
         leaderboardOptions = new Menu("Leaderboards");
+        
+        helpOptions = new Menu("Help")
+                .addItem(backToMenuItem);
+        
+        for (var txt : HELP_TEXT) {
+            helpOptions.addItem(new MenuItem("[WHITE]" + txt, () -> {
+            }, false));
+        }
 
         creditsOptions = new Menu("Credits")
                 .addItem(backToMenuItem);
@@ -260,6 +281,8 @@ public class GrubMenuScreen extends ScreenAdapter {
                 settingsOptions;
             case LEADERBOARD ->
                 leaderboardOptions;
+            case HELP ->
+                helpOptions;
             case CREDITS ->
                 creditsOptions;
             case LICENSE ->
