@@ -9,7 +9,7 @@ public class Slime extends Enemy {
 
     public Slime(SlimeSpecies species) {
         this.species = species;
-        setAnimation(SlimeSpecies.animationNames[RANDOM.nextInt(SlimeSpecies.animationNames.length)]);
+        setAnimation(SlimeSpecies.ANIMATION_NAMES[RANDOM.nextInt(SlimeSpecies.ANIMATION_NAMES.length)]);
         health = 2;
     }
 
