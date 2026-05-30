@@ -66,7 +66,7 @@ public class GrubMenuScreen extends ScreenAdapter {
                     this.leaderboardOptions.clearItems();
                     this.leaderboardOptions.addItem(backToMenuItem);
 
-                    var lb = Main.getLeaderboard();
+                    var lb = Main.getGameInstance().getLeaderboard();
 
                     leaderboardOptions.addItem(new MenuItem("[DEBUG] Generate new random Score", () -> {
                         lb.addEntry("ANONYMOUS", MathUtils.random(0, 100000));
@@ -113,7 +113,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         changePlayerNameInputMenu = new InputMenu(
             "Change Player Name",
             (name) -> {
-                Main.getSettingsConfig().player.set(name);
+                Main.getGameInstance().getSettingsConfig().player.set(name);
                 changeState(MenuState.SETTINGS);
             },
             () -> changeState(MenuState.SETTINGS)
@@ -192,7 +192,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         float boxWidth = screenWidth - 100;
         float boxHeight = screenHeight - 300;
 
-        var shapeRenderer = Main.getShapeRenderer();
+        var shapeRenderer = Main.getGameInstance().getShapeRenderer();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.rect(boxX, boxY, boxWidth, boxHeight);
@@ -206,7 +206,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         float itemX = boxX + TEXT_SPACE;
         float itemY = boxY + boxHeight - TEXT_SPACE;
 
-        var batch = Main.getSpriteBatch();
+        var batch = Main.getGameInstance().getSpriteBatch();
         batch.begin();
         for (int i = 0; i < items.size; i++){
             MenuItem item = items.get(i);

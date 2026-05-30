@@ -12,13 +12,13 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import io.github.java_projekt_pk.Managers.FontManager;
 
 public class Hud {
-    public final int PLAYER_HEALTH = 6;
-    private final int HEALTH_BAR_OFFSET_X = 20;
-    private final int HEALTH_BAR_OFFSET_Y = 50;
-    private final int HEART_SIZE = 16 * 2;
-    private final int HEART_MARGIN = 3;
-    private final float DAMAGE_HEART_DURATION = 0.2f;
-    private final int SCORE_TEXT_OFFSET = 20;
+    public static final int PLAYER_HEALTH = 6;
+    private static final int HEALTH_BAR_OFFSET_X = 20;
+    private static final int HEALTH_BAR_OFFSET_Y = 50;
+    private static final int HEART_SIZE = 16 * 2;
+    private static final int HEART_MARGIN = 3;
+    private static final float DAMAGE_HEART_DURATION = 0.2f;
+    private static final int SCORE_TEXT_OFFSET = 20;
 
     private final AtlasRegion heartFull;
     private final AtlasRegion heartEmpty;

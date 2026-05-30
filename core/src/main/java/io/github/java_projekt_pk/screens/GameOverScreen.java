@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -41,7 +40,7 @@ public class GameOverScreen extends  ScreenAdapter {
 
         ScreenUtils.clear(0.14f, 0.34f, 0.7f, 1f);
 
-        var batch = Main.getSpriteBatch();
+        var batch = Main.getGameInstance().getSpriteBatch();
         batch.begin();
 
         fontTitle.draw(batch, ":(", 50, Gdx.graphics.getHeight() - 50);
@@ -52,7 +51,7 @@ public class GameOverScreen extends  ScreenAdapter {
         font.draw(batch, "Zamiast tego damy ci SMUTNĄ BUŹKĘ. PO PROSTU SMUTEK!", 50, 360);
         font.draw(batch, "Ze ci sie komputer wywalił.", 50, 330);
         font.draw(batch, "Ale popatrz na to z innej strony.", 50, 270);
-        font.draw(batch, "Zdobyłeś niezły wynik: " + Main.getHud().getScore(), 50, 240);
+        font.draw(batch, "Zdobyłeś niezły wynik: " + Main.getGameInstance().getHud().getScore(), 50, 240);
         font.draw(batch, "Ukonczono 10%", 50, 150);
 
         batch.end();

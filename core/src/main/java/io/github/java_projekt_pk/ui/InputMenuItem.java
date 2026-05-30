@@ -43,7 +43,7 @@ public class InputMenuItem extends MenuItem implements Interactive {
     public void render(Box coors, float delta, boolean selected, boolean focus) {
         var TEXT_SPACE = 10;
         if(selected || focus) {
-            var shapeRenderer = Main.getShapeRenderer();
+            var shapeRenderer = Main.getGameInstance().getShapeRenderer();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(focus ? Color.BLUE : Color.WHITE);
             shapeRenderer.rect(coors.x + 1, coors.y, coors.width - 2, coors.height);

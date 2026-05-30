@@ -18,6 +18,7 @@ import io.github.java_projekt_pk.Managers.SoundManager;
 import io.github.java_projekt_pk.globals.Box;
 import io.github.java_projekt_pk.globals.HurtTextGenerator;
 import io.github.java_projekt_pk.globals.SystemDText;
+import io.github.java_projekt_pk.hud.Hud;
 import io.github.java_projekt_pk.monsters.Enemy;
 import io.github.java_projekt_pk.monsters.Slime;
 
@@ -75,13 +76,13 @@ public class InGameScreen implements Screen {
         inputManager = new InputManager();
         Gdx.input.setInputProcessor(inputManager);
 
-        font = Main.getFont();
+        font = Main.getGameInstance().getFont();
         HurtTextGenerator.reset();
     }
 
     @Override
     public void show() {
-        Main.soundManager.playSfx(SoundManager.SfxNames.BOOTING, 0);
+        Main.getGameInstance().getSoundManager().playSfx(SoundManager.SfxNames.BOOTING, 0);
     }
 
     @Override
@@ -89,16 +90,17 @@ public class InGameScreen implements Screen {
         ScreenUtils.clear(0, 0, 0, 1);
 
         process(delta);
-        var hud = Main.getHud();
+        var game = Main.getGameInstance();
+        var hud = game.getHud();
         hud.timeStep(delta);
 
-        var shapeRenderer = Main.getShapeRenderer();
+        var shapeRenderer = game.getShapeRenderer();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.rect(drawBox.x, drawBox.y, drawBox.width, drawBox.height);
         shapeRenderer.end();
 
-        var batch = Main.getSpriteBatch();
+        var batch = game.getSpriteBatch();
         batch.begin();
 
         float yPosition = finalBox.y + finalBox.height;
@@ -185,7 +187,7 @@ public class InGameScreen implements Screen {
         }
 
         if (!errorTriggered && time >= delay + MESSAGE_DELAY * 4) {
-            Main.soundManager.playSfx(SoundManager.SfxNames.GLITCH, 0);
+            Main.getGameInstance().getSoundManager().playSfx(SoundManager.SfxNames.GLITCH, 0);
             addSystemdMessage(MESSAGETYPE.ERROR, 10);
             errorTriggered = true;
             currentState = GAMESTATE.BREAK;
@@ -208,19 +210,20 @@ public class InGameScreen implements Screen {
         HurtTextGenerator.nextWave();
 
         // TODO: change this to more complex wave generation, make enemy spawn off screen on the right and slowly move towards "terminal", damaging player when they get there
-        Slime slime1 = new Slime(Main.redSlimeSpecies);
+        var game = Main.getGameInstance();
+        Slime slime1 = new Slime(game.redSlimeSpecies);
         EnemyManager.enemies.add(slime1);
 
-        Slime slime2 = new Slime(Main.greenSlimeSpecies);
+        Slime slime2 = new Slime(game.greenSlimeSpecies);
         EnemyManager.enemies.add(slime2);
 
-        Slime slime3 = new Slime(Main.greenSlimeSpecies);
+        Slime slime3 = new Slime(game.greenSlimeSpecies);
         EnemyManager.enemies.add(slime3);
 
-        Slime slime4 = new Slime(Main.blueSlimeSpecies);
+        Slime slime4 = new Slime(game.blueSlimeSpecies);
         EnemyManager.enemies.add(slime4);
 
-        Slime slime5 = new Slime(Main.blueSlimeSpecies);
+        Slime slime5 = new Slime(game.blueSlimeSpecies);
         EnemyManager.enemies.add(slime5);
 
         EnemyManager.selectNextEnemy();
@@ -243,14 +246,16 @@ public class InGameScreen implements Screen {
             enemy.timeStep(delta);
         }
 
-        if (Main.getHud().damagedMessage) {
+        var game = Main.getGameInstance();
+        var hud = game.getHud();
+        if (hud.damagedMessage) {
             addSystemdMessage(MESSAGETYPE.ERROR, 2);
-            Main.getHud().damagedMessage = false;
+            hud.damagedMessage = false;
         }
 
-        if (Main.getHud().health <= 0) {
-            Main.getLeaderboard().addEntry(Main.getSettingsConfig().player.get(), Main.getHud().getScore());
-            Main.getGameInstance().setScreen(new GameOverScreen());
+        if (hud.health <= 0) {
+            game.getLeaderboard().addEntry(game.getSettingsConfig().player.get(), hud.getScore());
+            game.setScreen(new GameOverScreen());
         }
 
         // hope we can somehow make it not check each frame :C
@@ -298,7 +303,7 @@ public class InGameScreen implements Screen {
     }
 
     private void nextRandomText() {
-        int type = 3 * Main.getHud().health / Main.getHud().PLAYER_HEALTH;
+        int type = 3 * Main.getGameInstance().getHud().health / Hud.PLAYER_HEALTH;
         switch (type) {
             case 2, 3 -> {
                 addSystemdMessage(MESSAGETYPE.OK);

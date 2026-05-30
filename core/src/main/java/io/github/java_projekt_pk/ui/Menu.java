@@ -39,7 +39,7 @@ public class Menu implements Disposable {
 
     public void setSelectedIndex(int index) {
         currentIndex = MathUtils.clamp(index, 0, items.size - 1);
-        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
+        Main.getGameInstance().getSoundManager().playSfx(SoundManager.SfxNames.SELECT, 0.1f);
     }
 
     public void moveSelectionUp() {
@@ -51,7 +51,7 @@ public class Menu implements Disposable {
             iter++;
         }
 
-        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
+        Main.getGameInstance().getSoundManager().playSfx(SoundManager.SfxNames.SELECT, 0.1f);
     }
 
     public void moveSelectionDown() {
@@ -63,7 +63,7 @@ public class Menu implements Disposable {
             iter++;
         }
 
-        Main.soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
+        Main.getGameInstance().getSoundManager().playSfx(SoundManager.SfxNames.SELECT, 0.1f);
     }
 
     public void leftPressed() {
