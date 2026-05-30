@@ -80,12 +80,6 @@ public class GrubMenuScreen extends ScreenAdapter {
 
                     var lb = Main.getGameInstance().getLeaderboard();
 
-                    leaderboardOptions.addItem(new MenuItem("[DEBUG] Generate new random Score", () -> {
-                        lb.addEntry("ANONYMOUS", MathUtils.random(0, 100000));
-                        lb.save();
-                        changeState(MenuState.MAIN_MENU);
-                    }));
-
                     for (var entry : lb.getScores()) {
                         leaderboardOptions.addItem(new MenuItem(
                                 entry.score() + " - " + entry.player() + "     [" + entry.time().format(FORMATTER) + "]",
