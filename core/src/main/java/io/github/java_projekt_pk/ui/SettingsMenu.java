@@ -6,10 +6,12 @@ import io.github.java_projekt_pk.Managers.SoundManager;
 public final class SettingsMenu extends Menu {
 
     private final MenuItem backToMenuItem;
+    private final MenuItem[] additionalItems;
 
-    public SettingsMenu(MenuItem backToMenuItem) {
+    public SettingsMenu(MenuItem backToMenuItem, MenuItem[] additionalItems) {
         super("Settings");
         this.backToMenuItem = backToMenuItem;
+        this.additionalItems = additionalItems;
         generateItems();
     }
 
@@ -25,6 +27,7 @@ public final class SettingsMenu extends Menu {
 
     public void generateItems() {
         addItem(backToMenuItem);
+
         var soundManager = Main.getGameInstance().getSoundManager();
         addItem(new MenuItem(String.format("%-15s%s", "Master volume",
                 getVolumeBar(soundManager.MasterVolume)), () -> { }, true));
@@ -32,6 +35,10 @@ public final class SettingsMenu extends Menu {
                 getVolumeBar(soundManager.MusicVolume)), () -> { }, true));
         addItem(new MenuItem(String.format("%-15s%s", "Sfx Volume",
                 getVolumeBar(soundManager.SfxVolume)), () -> { }, true));
+
+        for(var item : additionalItems) {
+            addItem(item);
+        }
     }
 
     private String getVolumeBar(float volume)
