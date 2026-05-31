@@ -78,7 +78,6 @@ public abstract class Config {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (NumberFormatException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
