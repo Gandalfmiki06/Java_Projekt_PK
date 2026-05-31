@@ -9,7 +9,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -96,10 +95,10 @@ public class GrubMenuScreen extends ScreenAdapter {
                 .addItem(new MenuItem("Licenses", () -> changeState(MenuState.LICENSE)))
                 .addItem(new MenuItem("Quit Game", () -> Gdx.app.exit()));
 
-        settingsOptions = new SettingsMenu(new MenuItem[]{
-            backToMenuItem,
-            new MenuItem("Change Player Name", () -> changeState(MenuState.SETTINGS_CHANGE_NICKNAME))
-        });
+        settingsOptions = new SettingsMenu(backToMenuItem,
+            new MenuItem[]{
+                new MenuItem("Change Player Name", () -> changeState(MenuState.SETTINGS_CHANGE_NICKNAME))
+            });
 
         leaderboardOptions = new Menu("Leaderboards");
 
