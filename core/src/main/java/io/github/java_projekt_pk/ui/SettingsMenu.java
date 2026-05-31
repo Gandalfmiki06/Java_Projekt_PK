@@ -5,11 +5,11 @@ import io.github.java_projekt_pk.Managers.SoundManager;
 
 public final class SettingsMenu extends Menu {
 
-    private final MenuItem backToMenuItem;
+    private final MenuItem[] additionalItems;
 
-    public SettingsMenu(MenuItem backToMenuItem) {
+    public SettingsMenu(MenuItem[] additionalItems) {
         super("Settings");
-        this.backToMenuItem = backToMenuItem;
+        this.additionalItems = additionalItems;
         generateItems();
     }
 
@@ -24,7 +24,10 @@ public final class SettingsMenu extends Menu {
     }
 
     public void generateItems() {
-        addItem(backToMenuItem);
+        for(var item : additionalItems) {
+            addItem(item);
+        }
+
         var soundManager = Main.getGameInstance().getSoundManager();
         addItem(new MenuItem(String.format("%-15s%s", "Master volume",
                 getVolumeBar(soundManager.MasterVolume)), () -> { }, true));
@@ -59,9 +62,9 @@ public final class SettingsMenu extends Menu {
         soundManager.playSfx(SoundManager.SfxNames.SELECT, 0.1f);
 
         switch (currentIndex) {
-            case 1 -> soundManager.MasterVolume += increase ? 0.05f : -0.05f;
-            case 2 -> soundManager.MusicVolume += increase ? 0.05f : -0.05f;
-            case 3 -> soundManager.SfxVolume += increase ? 0.05f : -0.05f;
+            case 2 -> soundManager.MasterVolume += increase ? 0.05f : -0.05f;
+            case 3 -> soundManager.MusicVolume += increase ? 0.05f : -0.05f;
+            case 4 -> soundManager.SfxVolume += increase ? 0.05f : -0.05f;
         }
 
         soundManager.MasterVolume = Math.clamp(soundManager.MasterVolume, 0, 1);

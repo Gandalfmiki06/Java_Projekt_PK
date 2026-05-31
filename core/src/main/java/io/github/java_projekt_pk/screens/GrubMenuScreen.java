@@ -30,7 +30,7 @@ public class GrubMenuScreen extends ScreenAdapter {
         LICENSE,
         SETTINGS_CHANGE_NICKNAME
     }
-    
+
     private static final String[] HELP_TEXT = {
         "Waves of bugs come to destroy your Linux kernel. Your job is to",
         "defend the boot screen from them. Each bug has a label with text",
@@ -42,7 +42,7 @@ public class GrubMenuScreen extends ScreenAdapter {
     };
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    
+
     private BitmapFont font;
 
     private MenuState currentState = MenuState.MAIN_MENU;
@@ -102,14 +102,16 @@ public class GrubMenuScreen extends ScreenAdapter {
                 .addItem(new MenuItem("Licenses", () -> changeState(MenuState.LICENSE)))
                 .addItem(new MenuItem("Quit Game", () -> Gdx.app.exit()));
 
-        settingsOptions = new SettingsMenu(backToMenuItem);
-        settingsOptions.addItem(new MenuItem("Change Player Name", () -> changeState(MenuState.SETTINGS_CHANGE_NICKNAME)));
+        settingsOptions = new SettingsMenu(new MenuItem[]{
+            backToMenuItem,
+            new MenuItem("Change Player Name", () -> changeState(MenuState.SETTINGS_CHANGE_NICKNAME))
+        });
 
         leaderboardOptions = new Menu("Leaderboards");
-        
+
         helpOptions = new Menu("Help")
                 .addItem(backToMenuItem);
-        
+
         for (var txt : HELP_TEXT) {
             helpOptions.addItem(new MenuItem("[WHITE]" + txt, () -> {
             }, false));
