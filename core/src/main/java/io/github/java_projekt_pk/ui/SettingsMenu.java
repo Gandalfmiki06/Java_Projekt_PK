@@ -5,12 +5,12 @@ import io.github.java_projekt_pk.Managers.SoundManager;
 
 public final class SettingsMenu extends Menu {
 
-    private final MenuItem backToMainMenu;
+    private final MenuItem backToMenuItem;
     private final MenuItem[] additionalItems;
 
-    public SettingsMenu(MenuItem backToMainMenu, MenuItem[] additionalItems) {
+    public SettingsMenu(MenuItem backToMenuItem, MenuItem[] additionalItems) {
         super("Settings");
-        this.backToMainMenu = backToMainMenu;
+        this.backToMenuItem = backToMenuItem;
         this.additionalItems = additionalItems;
         generateItems();
     }
@@ -26,7 +26,7 @@ public final class SettingsMenu extends Menu {
     }
 
     public void generateItems() {
-        addItem(backToMainMenu);
+        addItem(backToMenuItem);
 
         var soundManager = Main.getGameInstance().getSoundManager();
         addItem(new MenuItem(String.format("%-15s%s", "Master volume",
